@@ -263,9 +263,9 @@ function App(props) {
                         backgroundColor: '#4FB3EAFF', minWidth: 600
                     }}>
                         <Toolbar sx={{minWidth: 600, width: 'auto', backgroundColor: '#fdfdfd',boxShadow: "0px 10px 20px gainsboro", marginBlock: 0, marginInline:0,}} >
-                            <Grid component={""} hidden={showSignIn} container direction={'row'} sx={{paddingLeft:5}} spacing={1}  justifyItems={'center'} justifyContent={'center'}>
+                            <Grid component={""} hidden={showSignIn} container-direction={'row'} sx={{paddingLeft:5}} spacing={1} justifyContent={'center'} display={'flex'}>
                                 {['Пациенты','Почта', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
-                                    <Grid component={""} item key={text} xs={index === 4? 1: index===1? 2: index===3? 2: index===2? 2: 2} sm={index === 4? 1: index===1? 2: index===2? 2: index===3? 2: 2}  sx={{ alignItems:'center', justifyItems:'center', alignContent:'center', width: '100%'}}>
+                                    <Grid component={""} item key={text} xs={index === 4? 1: index===1? 2: index===3? 2: index===2? 2: 2} sm={index === 4? 1: index===1? 2: index===2? 2: index===3? 2: 2}  sx={{ alignItems:'center', justifyContent:'center', alignContent:'center', width: '100%'}}>
                                         <Button variant={'outlined'} component={Link} sx={{ height: 65, width: 100, marginBlock:0, fontFamily: 'Roboto', borderColor: 'white', borderRadius: 0,borderBottomColor: "white", borderBottomWidth: 0,fontWeight: index ===2? 'normal':'lighter', color: 'dimgray', textTransform: 'none', boxShadow: 0, '&:hover': {
                                                 color: "#4FB3EAFF", borderColor: 'white', borderBottomColor: "#4FB3EAFF", borderRadius: 0, borderBottomWidth: 5, backgroundColor: 'white'
                                             }, '&:active': {
@@ -286,7 +286,7 @@ function App(props) {
                                                                }
                                                                }/>
                                             }
-                                            <Badge badgeContent={localStorage.getItem('mesAm')}  invisible={index !== 1 || localStorage.getItem('mesAm') == 0} sx={{ "& .MuiBadge-badge": {
+                                            <Badge badgeContent={localStorage.getItem('mesAm')} invisible={index !== 1 || localStorage.getItem('mesAm') == 0} sx={{ "& .MuiBadge-badge": {
                                                     color: "white",
                                                     backgroundColor: "#4FB3EAFF",
                                                 }}} >

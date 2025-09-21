@@ -6,7 +6,7 @@ import {TourProvider} from '@reactour/tour'
 import {stepsUpload} from "./step";
 
 //const BASE_URL = 'http://msa.mephi.ru/api/v3'
-const BASE_URL = 'http://localhost:8000'
+const BASE_URL = 'http://localhost:8000/api/v3'
 //const BASE_URL = 'http://10.164.5.118:8099/api/v3'
 //const BASE_URL = 'https://c3ab-79-139-147-67.ngrok-free.app/api/v3'
 //const BASE_URL = '/api/v3'
