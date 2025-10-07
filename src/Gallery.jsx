@@ -210,6 +210,8 @@ const TiffImageComponent = (props) => {
     }
     useEffect( () => {
         console.log(props.img)
+        console.log(props.url)
+        console.log(props.link1)
         if (props.img !== "" && props.img !== null) {
             if (props.img.split('.')[1] === 'tiff' || props.img.split('.')[1] === 'tif') {
                 setType('tiff')
@@ -219,37 +221,10 @@ const TiffImageComponent = (props) => {
                     tmp_ar.push({type: 'image', url: props.slide_template[0]+'/'+ props.slide_template[1]+i+props.slide_template[2]})
                     i++
                 }
-                // const xhr = new XMLHttpRequest();
-                // xhr.open('GET', 'http://msa.mephi.ru'+ props.img);
-                // xhr.responseType = 'arraybuffer';
-                // xhr.onload = e => {
-                // const ifds = UTIF.decode(e.target.response);
-                // const firstPageOfTif = ifds[0];
-
-                // var index = 0;
-                // for (let tmp of ifds) {
-                //     UTIF.decodeImage(e.target.response, ifds[index], ifds);
-                //     const rgba = UTIF.toRGBA8(tmp);
-                //     const imageWidth = firstPageOfTif.width;
-                //     const imageHeight = firstPageOfTif.height;
-                //     const cnv = document.createElement('canvas');
-                //     cnv.width = imageWidth;
-                //     cnv.height = imageHeight;
-                //     const ctx = cnv.getContext('2d');
-                //     const imageData = ctx.createImageData(imageWidth, imageHeight);
-                //     for (let i = 0; i < rgba.length; i++) {
-                //         imageData.data[i] = rgba[i];
-                //     }
-                //     ctx.putImageData(imageData, 0, 0);
-                //     const cur = Canvas2image.convertToPNG(cnv)
-                //     tmp_ar.push({type: 'image', url: cur.src})
-                //     index += 1;
-                // }
+                console.log(tmp_ar)
                 setArray(tmp_ar);
                 setLength(tmp_ar.length)
                 setSucc(true)
-                // };
-                // xhr.send();
             } else {
                 setSucc(true)
             }
@@ -412,7 +387,8 @@ const Gallery = (props) => {
     // }, [link3, link2]);
     return (
         <div>
-            {(props.link1 !== null && props.link1 !== "") &&
+            {
+                (props.link1 !== null && props.link1 !== "") &&
                 <TiffImageComponent url={props.url} img={link1} seg={props.seg} imageid={props.imageid} date={props.date} image_count={props.image_count} slide_template={props.slide_template}/>
             }
             {(props.link1 === null || props.link1 === "") &&

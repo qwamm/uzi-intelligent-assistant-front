@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from "react";
 import OpenSeaDragon from "openseadragon";
 import '../styles/style.css'
-import * as Annotorious from '@recogito/annotorious-openseadragon';
+import  Annotorious from '@recogito/annotorious-openseadragon';
 import SelectorPack from '@recogito/annotorious-selector-pack'
 import '@recogito/annotorious-openseadragon/dist/annotorious.min.css';
 import axios from "axios";
