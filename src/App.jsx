@@ -262,34 +262,94 @@ function App(props) {
                         borderBottomLeftRadius: 6,
                         backgroundColor: '#4FB3EAFF', minWidth: 600
                     }}>
-                        <Toolbar sx={{minWidth: 600, width: 'auto', backgroundColor: '#fdfdfd',boxShadow: "0px 10px 20px gainsboro", marginBlock: 0, marginInline:0,}} >
-                            <Grid component={""} hidden={showSignIn} container-direction={'row'} sx={{paddingLeft:5}} spacing={1} justifyContent={'center'} display={'flex'}>
+                        <Toolbar sx={{
+                            minWidth: 600,
+                            width: '100%',
+                            backgroundColor: '#fdfdfd',
+                            boxShadow: "0px 10px 20px gainsboro",
+                            marginBlock: 0,
+                            marginInline: 0,
+                        }}>
+                            <Grid
+                                container
+                                hidden={showSignIn}
+                                direction="row"
+                                sx={{ paddingLeft: 5 }}
+                                spacing={2}
+                                justifyContent="space-between"
+                                alignItems="center"
+                            >
                                 {['Пациенты','Почта', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
-                                    <Grid component={""} item key={text} xs={index === 4? 1: index===1? 2: index===3? 2: index===2? 2: 2} sm={index === 4? 1: index===1? 2: index===2? 2: index===3? 2: 2}  sx={{ alignItems:'center', justifyContent:'center', alignContent:'center', width: '100%'}}>
-                                        <Button variant={'outlined'} component={Link} sx={{ height: 65, width: 100, marginBlock:0, fontFamily: 'Roboto', borderColor: 'white', borderRadius: 0,borderBottomColor: "white", borderBottomWidth: 0,fontWeight: index ===2? 'normal':'lighter', color: 'dimgray', textTransform: 'none', boxShadow: 0, '&:hover': {
-                                                color: "#4FB3EAFF", borderColor: 'white', borderBottomColor: "#4FB3EAFF", borderRadius: 0, borderBottomWidth: 5, backgroundColor: 'white'
-                                            }, '&:active': {
-                                                color: "#4FB3EAFF", borderColor: 'white', borderBottomColor: "#4FB3EAFF", borderRadius: 0, borderBottomWidth: 5, backgroundColor: 'white'
-                                            }, }}
-                                                to={index === 2 ? `home` : index === 0 ? `patients` : index === 1 ? `inbox`: index === 3? `faq`:`sign_in`} onClick={index === 4 ? handleExit : null }>
-                                            {index === 0 ? null : (index === 1) ? null : (index === 2) ? null : (index === 3) ? null :
-                                                <ExitToAppIcon style={{maxWidth: '20px', maxHeight: '20px'}}
-                                                               sx={{
-                                                                   '& svg': {
-                                                                       fontSize: 20,
-                                                                       color: "dimgray"
-                                                                   },
-                                                                   '&:hover': {
-                                                                       fontSize: 20,
-                                                                       color: "#4FB3EAFF"
-                                                                   },
-                                                               }
-                                                               }/>
-                                            }
-                                            <Badge badgeContent={localStorage.getItem('mesAm')} invisible={index !== 1 || localStorage.getItem('mesAm') == 0} sx={{ "& .MuiBadge-badge": {
-                                                    color: "white",
-                                                    backgroundColor: "#4FB3EAFF",
-                                                }}} >
+                                    <Grid
+                                        item
+                                        key={text}
+                                        xs="auto"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flex: index === 2 ? '1 0 auto' : '0 1 auto'
+                                        }}
+                                    >
+                                        <Button
+                                            variant={'outlined'}
+                                            component={Link}
+                                            sx={{
+                                                height: 65,
+                                                minWidth: index === 2 ? 160 : 100,
+                                                paddingX: 2,
+                                                marginBlock: 0,
+                                                fontFamily: 'Roboto',
+                                                borderColor: 'white',
+                                                borderRadius: 0,
+                                                borderBottomColor: "white",
+                                                borderBottomWidth: 0,
+                                                fontWeight: index === 2 ? 'normal' : 'lighter',
+                                                color: 'dimgray',
+                                                textTransform: 'none',
+                                                boxShadow: 0,
+                                                '&:hover': {
+                                                    color: "#4FB3EAFF",
+                                                    borderColor: 'white',
+                                                    borderBottomColor: "#4FB3EAFF",
+                                                    borderRadius: 0,
+                                                    borderBottomWidth: 5,
+                                                    backgroundColor: 'white'
+                                                },
+                                                '&:active': {
+                                                    color: "#4FB3EAFF",
+                                                    borderColor: 'white',
+                                                    borderBottomColor: "#4FB3EAFF",
+                                                    borderRadius: 0,
+                                                    borderBottomWidth: 5,
+                                                    backgroundColor: 'white'
+                                                },
+                                            }}
+                                            to={index === 2 ? `home` : index === 0 ? `patients` : index === 1 ? `inbox` : index === 3 ? `faq` : `sign_in`}
+                                            onClick={index === 4 ? handleExit : null}
+                                        >
+                                            {index === 4 && (
+                                                <ExitToAppIcon
+                                                    sx={{
+                                                        fontSize: 20,
+                                                        color: "dimgray",
+                                                        marginRight: 1,
+                                                        '&:hover': {
+                                                            color: "#4FB3EAFF"
+                                                        },
+                                                    }}
+                                                />
+                                            )}
+                                            <Badge
+                                                badgeContent={localStorage.getItem('mesAm')}
+                                                invisible={index !== 1 || localStorage.getItem('mesAm') == 0}
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        color: "white",
+                                                        backgroundColor: "#4FB3EAFF",
+                                                    }
+                                                }}
+                                            >
                                                 {text}
                                             </Badge>
                                         </Button>

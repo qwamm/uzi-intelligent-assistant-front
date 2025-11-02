@@ -14,9 +14,6 @@ import {
     TextField,
 } from "@mui/material";
 
-
-import Grid from '@mui/material/Grid';
-
 import axios from "axios";
 import {Link, useParams} from 'react-router-dom';
 
@@ -170,99 +167,120 @@ class SignInPage extends React.Component {
                     h3: {color: 'dimgray', fontSize: 15, fontFamily: "Roboto",fontWeight: 'normal', marginBlockEnd: 15}
                 }}/>
 
-                <Grid component={""} container spacing={1}>
-                    <Grid component={""} item xs>
-                        <Box component={""} sx={{width:'auto', marginBlock: 15, marginInlineStart:10, marginInlineEnd:10}}>
-                            <FormControl>
-                                <h1 >Интеллектуальный ассистент слепой диагностики узловых образований щитовидной железы</h1>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: '100vh' }}>
+                    <Box sx={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 4
+                    }}>
+                        <h1 style={{
+                            textAlign: 'center',
+                            fontSize: '3rem',
+                            fontWeight: 'bold',
+                            fontFamily: "Roboto",
+                            margin: 0
+                        }}>
+                            Интеллектуальный ассистент слепой диагностики узловых образований щитовидной железы
+                        </h1>
+                    </Box>
+
+                    <Box sx={{
+                        flex: 1,
+                        backgroundColor: '#ffffff',
+                        padding: 4,
+                        borderTopLeftRadius: 130,
+                        boxShadow: "0px 0px 20px gainsboro",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        maxHeight: '800px',
+                    }}>
+                        <h5>Войти</h5>
+
+                        <Box sx={{ width: '100%', maxWidth: 400, paddingBottom: 3 }}>
+                            <FormControl fullWidth>
+                                <InputLabel shrink sx={{ marginBlockEnd: 5 }}>
+                                    Эл. почта
+                                </InputLabel>
+                                <TextFieldWrapper
+                                    value={this.state.email}
+                                    onChange={this.handleEmail}
+                                    variant='outlined'
+                                    helperText="Введите Вашу электронную почту"
+                                    sx={{ marginBlockStart: 1 }}
+                                />
                             </FormControl>
                         </Box>
-                    </Grid>
-                    <Grid component={""} item xs>
-                        <Box component={""} sx={{
-                            backgroundColor: '#ffffff',
-                            paddingLeft: 20,
-                            paddingTop: 10,
-                            borderTopLeftRadius: 130,
-                            elevation: 10,
-                            boxShadow: "0px 0px 20px gainsboro",
-                            height: '100%',
-                            minHeight: 600,
-                            '&:hover': {
-                                backgroundColor: "#ffffff",
-                            },
-                        }} color={theme.palette.secondary.contrastText} >
-                            <h5>Войти</h5>
-                            <Box component={""} sx={{width: 500, paddingBottom: 3}}>
-                                <FormControl fullWidth>
-                                    <InputLabel shrink sx={{marginBlockEnd: 5}}>
-                                        Эл. почта
-                                    </InputLabel>
-                                    <TextFieldWrapper
-                                        value={this.state.email}
-                                        onChange={this.handleEmail}
-                                        variant='outlined'
-                                        helperText="Введите Вашу электронную почту"
-                                        sx={{marginBlockStart: 1}}
-                                    >
-                                    </TextFieldWrapper>
-                                </FormControl>
-                            </Box>
-                            <Box component={""} sx={{width: 500, paddingBottom: 3}}>
-                                <FormControl fullWidth>
-                                    <InputLabel shrink sx={{marginBlockEnd: 5}}>
-                                        Пароль
-                                    </InputLabel>
-                                    <TextFieldWrapper
-                                        value={this.state.password}
-                                        onChange={this.handlePassword}
-                                        variant='outlined'
-                                        type={this.state.showPassword ? "text" :"password"}
-                                        InputProps={{ // <-- This is where the toggle button is added.
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        aria-label="toggle password visibility"
-                                                        onClick={this.handleClickShowPassword}
-                                                        onMouseDown={this.handleMouseDownPassword}
-                                                    >
-                                                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            )
-                                        }}
-                                        helperText={ "Введите пароль"}
-                                        sx={{marginBlockStart: 1}}
-                                    >
-                                    </TextFieldWrapper>
-                                </FormControl>
-                            </Box>
-                            <Box component={""} sx={{width: 500, paddingBottom: 3}}>
-                                <FormControl fullWidth>
-                                    <Button disabled={!(this.state.emailEntered && this.state.passwordEntered && this.state.email.length !== 0 && this.state.password.length)}
-                                            sx={{
-                                                color: '#4fb3ea',
-                                                '&:focus': {backgroundColor: '#4fb3ea'},
-                                                '&:hover': {
-                                                },
-                                                fontFamily: 'Roboto'
-                                            }} variant={'outlined'} onClick={this.handleResponse}>
-                                        Войти
-                                    </Button>
-                                </FormControl>
-                            </Box>
-                            <Box component={""} sx={{paddingBottom: 3}} display={'flex'}>
-                                <h3>У Вас нет аккаунта?</h3>
-                                <Button component={Link} to={`/sign_up`}
-                                        sx={{ textTransform: 'none', width: 'auto', fontStyle: {color: '#4FB3EAFF'},
-                                            fontFamily: 'Roboto', fontWeight: 'normal', fontSize: 15, marginBlockStart:0.2
-                                        }} variant='text'>
-                                    Зарегистрироваться
-                                </Button>
-                            </Box>
+
+                        <Box sx={{ width: '100%', maxWidth: 400, paddingBottom: 3 }}>
+                            <FormControl fullWidth>
+                                <InputLabel shrink sx={{ marginBlockEnd: 5 }}>
+                                    Пароль
+                                </InputLabel>
+                                <TextFieldWrapper
+                                    value={this.state.password}
+                                    onChange={this.handlePassword}
+                                    variant='outlined'
+                                    type={this.state.showPassword ? "text" :"password"}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={this.handleClickShowPassword}
+                                                    onMouseDown={this.handleMouseDownPassword}
+                                                >
+                                                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                    helperText="Введите пароль"
+                                    sx={{ marginBlockStart: 1 }}
+                                />
+                            </FormControl>
                         </Box>
-                    </Grid>
-                </Grid>
+
+                        <Box sx={{ width: '100%', maxWidth: 400, paddingBottom: 3 }}>
+                            <FormControl fullWidth>
+                                <Button
+                                    disabled={!(this.state.emailEntered && this.state.passwordEntered && this.state.email.length !== 0 && this.state.password.length)}
+                                    sx={{
+                                        color: '#4fb3ea',
+                                        '&:focus': { backgroundColor: '#4fb3ea' },
+                                        fontFamily: 'Roboto'
+                                    }}
+                                    variant={'outlined'}
+                                    onClick={this.handleResponse}
+                                >
+                                    Войти
+                                </Button>
+                            </FormControl>
+                        </Box>
+
+                        <Box sx={{ paddingBottom: 3 }} display={'flex'}>
+                            <h3>У Вас нет аккаунта?</h3>
+                            <Button
+                                component={Link}
+                                to={`/sign_up`}
+                                sx={{
+                                    textTransform: 'none',
+                                    width: 'auto',
+                                    color: '#4FB3EAFF',
+                                    fontFamily: 'Roboto',
+                                    fontWeight: 'normal',
+                                    fontSize: 15,
+                                    marginBlockStart: 0.2
+                                }}
+                                variant='text'
+                            >
+                                Зарегистрироваться
+                            </Button>
+                        </Box>
+                    </Box>
+                </Box>
             </FormControl>)
 
     }

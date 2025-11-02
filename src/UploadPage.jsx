@@ -269,7 +269,7 @@ class UploadPage extends React.Component {
                 </Snackbar>
                 <Box component={""} sx={{
                     backgroundColor: '#ffffff',
-                    paddingLeft: 20,
+                    paddingLeft: 40,
                     paddingTop: 15,
                     borderTopLeftRadius: 130,
                     height: 'auto',
@@ -280,7 +280,7 @@ class UploadPage extends React.Component {
                         backgroundColor: "#ffffff",
                     }
                 }} display={'flex'} color={theme.palette.secondary.contrastText}>
-                    <Grid component={""} container direction={'row'} spacing={5}>
+                    <Grid component={""} container direction={'row'} spacing={25}>
                         <Grid component={""} item  xs justifyItems={'center'}>
                             <Box className="zero-step" component={""} sx={{display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center'}}>
                                 <GlobalStyles styles={{
