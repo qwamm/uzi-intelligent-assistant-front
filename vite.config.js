@@ -1,15 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+const API_ORIGIN_URL = 'http://localhost:8000'
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '0.0.0.0',  // Важно для Docker
-    port: 5173,
     proxy: {
       '/media': {
-        target: 'http://localhost:8000',
+        target: API_ORIGIN_URL,
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/v3': {
+        target: API_ORIGIN_URL,
         changeOrigin: true,
         secure: false,
       }
