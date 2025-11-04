@@ -31,7 +31,8 @@ root.render(
                 <App url={BASE_URL}/>
             </TourProvider>
         </BrowserRouter>
-    </React.StrictMode>)
+    </React.StrictMode>
+)
 
 
 

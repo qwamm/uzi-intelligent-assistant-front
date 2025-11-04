@@ -269,17 +269,27 @@ function App(props) {
                             boxShadow: "0px 10px 20px gainsboro",
                             marginBlock: 0,
                             marginInline: 0,
+                            justifyContent: 'space-around',
                         }}>
+                            <Box
+                                component="img"
+                                src="static/header.svg"
+                                alt="Второе мнение"
+                                sx={{
+                                    position: 'absolute',
+                                    left: 45,
+                                    height: 'auto', // регулируйте высоту по необходимости
+                                    width: 300, // ширина автоматически подстроится
+                                }}
+                            />
                             <Grid
                                 container
                                 hidden={showSignIn}
                                 direction="row"
-                                sx={{ paddingLeft: 5 }}
                                 spacing={2}
-                                justifyContent="space-between"
                                 alignItems="center"
                             >
-                                {['Пациенты','Почта', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
+                                {['Пациенты', 'Почта', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
                                     <Grid
                                         item
                                         key={text}
@@ -362,7 +372,10 @@ function App(props) {
                 {/*<Fab variant={'extended'} sx={{position: 'fixed', bottom:20, right:20, backgroundColor: "#ffffff", color: '#4FB3EAFF', width:40, height:40}} component={Link} to={`/faq`}>*/}
                 {/*    <QuestionMarkIcon></QuestionMarkIcon>*/}
                 {/*</Fab>*/}
-                <Fab disabled={showSignIn} variant={'extended'} sx={{position: 'fixed', bottom:20, right:20, backgroundColor: "#ffffff", color: 'dimgray', width:40, height:40}} onClick={handleIntro}>
+                <Fab disabled={showSignIn} variant={'extended'} sx={{
+                    position: 'fixed',
+                    bottom: 20,
+                    right:20, backgroundColor: "#ffffff", color: 'dimgray', width:40, height:40}} onClick={handleIntro}>
                     <QuestionMarkIcon></QuestionMarkIcon>
                 </Fab>
                 <Routes>
