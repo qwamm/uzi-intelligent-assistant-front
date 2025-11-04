@@ -21,6 +21,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import {Visibility, VisibilityOff} from "@mui/icons-material";
+import Typography from "@mui/material/Typography";
 
 
 
@@ -41,17 +42,17 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 export const TextFieldWrapper = styled(TextField)`
-  fieldset {
-    border-radius: 4px;
-    border-color: #4FB3EAFF;
-    border-width: 0.5px;
-  }
+    fieldset {
+        border-radius: 4px;
+        border-color: #4FB3EAFF;
+        border-width: 0.5px;
+    }
 
 ,
 & . MuiOutlinedInput-root {
-  &.Mui-focused fieldset {
-    border-color: #4FB3EAFF;
-  }
+    &.Mui-focused fieldset {
+        border-color: #4FB3EAFF;
+    }
 }
 `;
 
@@ -99,12 +100,7 @@ class SignInPage extends React.Component {
         const formData = new FormData();
         formData.append("email", this.state.email);
         formData.append("password", this.state.password);
-        axios.post(this.props.url + "/auth/login/", formData,
-            //     {headers: {
-            //     'Access-Control-Allow-Origin': '*',
-            //         "Access-Control-Allow-Methods": 'GET, PUT, POST, DELETE, OPTIONS',
-            // }}
-        )
+        axios.post(this.props.url + "/auth/login/", formData)
             .then((response) => {
                 this.setState({
                     openSuccess: true,
@@ -148,7 +144,7 @@ class SignInPage extends React.Component {
                               <CloseIcon/>
                           </IconButton>}>
                     <Alert severity="success" sx={{width: '100%', backgroundColor: '#00d995'}}
-                           onClose={this.handleClose}>Аккаунт создан!</Alert>
+                           onClose={this.handleClose}>Вход выполнен успешно!</Alert>
                 </Snackbar>
                 <Snackbar open={this.state.openError} autoHideDuration={6000} onClose={this.handleClose}
                           TransitionComponent={Slide}
@@ -168,121 +164,185 @@ class SignInPage extends React.Component {
                 }}/>
 
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: '100vh' }}>
+                    {/* Левая часть - заголовок */}
                     <Box sx={{
                         flex: 1,
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 4
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-start',
+                        padding: 4,
+                        backgroundColor: '#f8fdff',
+                        paddingTop: 20,
+                        paddingLeft: 8
                     }}>
-                        <h1 style={{
-                            textAlign: 'center',
-                            fontSize: '3rem',
-                            fontWeight: 'bold',
-                            fontFamily: "Roboto",
-                            margin: 0
-                        }}>
-                            Интеллектуальный ассистент слепой диагностики узловых образований щитовидной железы
-                        </h1>
+                            <Typography
+                                variant='h2'
+                                sx={{
+                                    textAlign: 'left',
+                                    maxWidth: 700,
+                                    fontSize: '3.2rem',
+                                    fontWeight: 'bold',
+                                    fontFamily: "Lato",
+                                    margin: 0,
+                                    color: '#4FB3EAFF',
+                                    lineHeight: 1.2
+                                }}
+                            >
+                                Интеллектуальный ассистент слепой диагностики узловых образований щитовидной железы
+                            </Typography>
                     </Box>
 
+                    {/* Правая часть - форма входа */}
                     <Box sx={{
                         flex: 1,
                         backgroundColor: '#ffffff',
-                        padding: 4,
+                        padding: 8,
                         borderTopLeftRadius: 130,
-                        boxShadow: "0px 0px 20px gainsboro",
+                        borderBottomLeftRadius: 130,
+                        boxShadow: "0px 0px 30px rgba(0,0,0,0.1)",
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
-                        maxHeight: '800px',
+                        justifyContent: 'flex-start',
+                        minHeight: '100vh',
+                        paddingTop: 12,
+                        paddingLeft: 12
                     }}>
-                        <h5>Войти</h5>
+                        <Box sx={{
+                            maxWidth: 400,
+                            margin: '0 auto',
+                            width: '100%',
+                            marginTop: 4,
+                            marginLeft: 4
+                        }}>
+                            <h5 style={{
+                                textAlign: 'left',
+                                marginBottom: 40,
+                                fontSize: '2rem',
+                                fontWeight: '600'
+                            }}>Вход в систему</h5>
 
-                        <Box sx={{ width: '100%', maxWidth: 400, paddingBottom: 3 }}>
-                            <FormControl fullWidth>
-                                <InputLabel shrink sx={{ marginBlockEnd: 5 }}>
-                                    Эл. почта
-                                </InputLabel>
-                                <TextFieldWrapper
-                                    value={this.state.email}
-                                    onChange={this.handleEmail}
-                                    variant='outlined'
-                                    helperText="Введите Вашу электронную почту"
-                                    sx={{ marginBlockStart: 1 }}
-                                />
-                            </FormControl>
-                        </Box>
+                            {/* Поле email */}
+                            <Box sx={{ paddingBottom: 3 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel shrink sx={{
+                                        marginBlockEnd: 1,
+                                        fontSize: '1rem',
+                                        fontWeight: '500',
+                                        color: 'dimgray'
+                                    }}>
+                                        Электронная почта
+                                    </InputLabel>
+                                    <TextFieldWrapper
+                                        value={this.state.email}
+                                        onChange={this.handleEmail}
+                                        variant='outlined'
+                                        placeholder="example@mail.ru"
+                                        sx={{ marginBlockStart: 1 }}
+                                    />
+                                </FormControl>
+                            </Box>
 
-                        <Box sx={{ width: '100%', maxWidth: 400, paddingBottom: 3 }}>
-                            <FormControl fullWidth>
-                                <InputLabel shrink sx={{ marginBlockEnd: 5 }}>
-                                    Пароль
-                                </InputLabel>
-                                <TextFieldWrapper
-                                    value={this.state.password}
-                                    onChange={this.handlePassword}
-                                    variant='outlined'
-                                    type={this.state.showPassword ? "text" :"password"}
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={this.handleClickShowPassword}
-                                                    onMouseDown={this.handleMouseDownPassword}
-                                                >
-                                                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        )
-                                    }}
-                                    helperText="Введите пароль"
-                                    sx={{ marginBlockStart: 1 }}
-                                />
-                            </FormControl>
-                        </Box>
+                            {/* Поле пароля */}
+                            <Box sx={{ paddingBottom: 4 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel shrink sx={{
+                                        marginBlockEnd: 1,
+                                        fontSize: '1rem',
+                                        fontWeight: '500',
+                                        color: 'dimgray'
+                                    }}>
+                                        Пароль
+                                    </InputLabel>
+                                    <TextFieldWrapper
+                                        value={this.state.password}
+                                        onChange={this.handlePassword}
+                                        variant='outlined'
+                                        type={this.state.showPassword ? "text" :"password"}
+                                        placeholder="Введите ваш пароль"
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={this.handleClickShowPassword}
+                                                        onMouseDown={this.handleMouseDownPassword}
+                                                        edge="end"
+                                                    >
+                                                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        sx={{ marginBlockStart: 1 }}
+                                    />
+                                </FormControl>
+                            </Box>
 
-                        <Box sx={{ width: '100%', maxWidth: 400, paddingBottom: 3 }}>
-                            <FormControl fullWidth>
+                            {/* Кнопка входа */}
+                            <Box sx={{ paddingBottom: 3 }}>
+                                <FormControl fullWidth>
+                                    <Button
+                                        disabled={!(this.state.emailEntered && this.state.passwordEntered && this.state.email.length !== 0 && this.state.password.length)}
+                                        sx={{
+                                            color: '#ffffff',
+                                            backgroundColor: '#4FB3EAFF',
+                                            '&:hover': {
+                                                backgroundColor: '#3a9bc8'
+                                            },
+                                            '&:disabled': {
+                                                backgroundColor: '#cccccc',
+                                                color: '#666666'
+                                            },
+                                            fontFamily: 'Roboto',
+                                            fontWeight: '500',
+                                            fontSize: '1.1rem',
+                                            padding: '12px 24px',
+                                            borderRadius: '8px',
+                                            textTransform: 'none',
+                                            boxShadow: '0px 4px 12px rgba(79, 179, 234, 0.3)'
+                                        }}
+                                        variant={'contained'}
+                                        onClick={this.handleResponse}
+                                    >
+                                        Войти в систему
+                                    </Button>
+                                </FormControl>
+                            </Box>
+
+                            {/* Ссылка на регистрацию */}
+                            <Box sx={{
+                                textAlign: 'left',
+                                paddingTop: 3
+                            }}>
+                                <h3 style={{
+                                    display: 'inline',
+                                    marginRight: 8
+                                }}>Нет учетной записи?</h3>
                                 <Button
-                                    disabled={!(this.state.emailEntered && this.state.passwordEntered && this.state.email.length !== 0 && this.state.password.length)}
+                                    component={Link}
+                                    to={`/sign_up`}
                                     sx={{
-                                        color: '#4fb3ea',
-                                        '&:focus': { backgroundColor: '#4fb3ea' },
-                                        fontFamily: 'Roboto'
+                                        textTransform: 'none',
+                                        color: '#4FB3EAFF',
+                                        fontFamily: 'Roboto',
+                                        fontWeight: '500',
+                                        fontSize: '1rem',
+                                        padding: 0,
+                                        minWidth: 'auto',
+                                        '&:hover': {
+                                            backgroundColor: 'transparent',
+                                            textDecoration: 'underline'
+                                        }
                                     }}
-                                    variant={'outlined'}
-                                    onClick={this.handleResponse}
+                                    variant='text'
                                 >
-                                    Войти
+                                    Зарегистрироваться
                                 </Button>
-                            </FormControl>
-                        </Box>
-
-                        <Box sx={{ paddingBottom: 3 }} display={'flex'}>
-                            <h3>У Вас нет аккаунта?</h3>
-                            <Button
-                                component={Link}
-                                to={`/sign_up`}
-                                sx={{
-                                    textTransform: 'none',
-                                    width: 'auto',
-                                    color: '#4FB3EAFF',
-                                    fontFamily: 'Roboto',
-                                    fontWeight: 'normal',
-                                    fontSize: 15,
-                                    marginBlockStart: 0.2
-                                }}
-                                variant='text'
-                            >
-                                Зарегистрироваться
-                            </Button>
+                            </Box>
                         </Box>
                     </Box>
                 </Box>
             </FormControl>)
-
     }
 }
 
