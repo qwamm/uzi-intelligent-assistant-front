@@ -13,13 +13,24 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
 import EditIcon from "@mui/icons-material/Edit";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Badge from '@mui/material/Badge';
 
 function createData(id, patientName, patientPolicy, email, uziDate, hasNodules, isActive) {
     return {id: id, patientName: patientName,patientPolicy: patientPolicy, email: email,uziDate: uziDate.toLocaleDateString(),hasNodules: hasNodules,isActive: isActive};
 }
 
 const FilterComponent = (props) => (
-    <Paper className={'sixth-step'} elevation={0} sx={{justifyContent: 'center', alignContent:'center', alignItems: 'center', justifyItems: 'center', display: 'flex'}}>
+    <Paper className={'sixth-step'} elevation={0} sx={{
+        justifyContent: 'center',
+        alignContent:'center',
+        alignItems: 'center',
+        justifyItems: 'center',
+        display: 'flex',
+        background: 'transparent'
+    }}>
         <TextField
             id="search"
             type="text"
@@ -27,39 +38,137 @@ const FilterComponent = (props) => (
             aria-label="Search Input"
             value={props.filterText}
             onChange={(e) => props.onFilter(e.target.value)}
-            sx={{paddingLeft: 5,width:350, borderColor: '#4FB3EAFF',"& .MuiOutlinedInput-root.Mui-focused": {
-                    "& > fieldset": {
-                        borderColor: '#4FB3EAFF'
+            sx={{
+                width: 350,
+                '& .MuiOutlinedInput-root': {
+                    borderRadius: 3,
+                    '&.Mui-focused': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#4FB3EAFF',
+                            borderWidth: 2
+                        }
+                    },
+                    '&:hover': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#4FB3EAFF'
+                        }
                     }
-                }, 'fieldset':{borderRadius: 5}}} style={{borderRadius: '10 px'}}
-
+                },
+                '& .MuiOutlinedInput-input': {
+                    padding: '12px 16px',
+                    fontSize: '14px'
+                }
+            }}
         />
-        <IconButton onClick={() => props.onFilter("")}> <ClearIcon>
-        </ClearIcon>
+        <IconButton
+            onClick={() => props.onFilter("")}
+            sx={{
+                color: '#666',
+                '&:hover': {
+                    color: '#4FB3EAFF',
+                    backgroundColor: 'rgba(79, 179, 234, 0.1)'
+                }
+            }}
+        >
+            <ClearIcon />
         </IconButton>
     </Paper>
 );
+
 const paginationComponentOptions = {
     rowsPerPageText: 'Строк на странице',
     rangeSeparatorText: 'из',
     selectAllRowsItem: true,
     selectAllRowsItemText: 'Все',
 };
+
 const MyGrid = (props) => {
     var [tableData, setTableData] = useState([])
     var filteredItems = tableData.filter(item => ((item.patientName && item.patientName.toLowerCase().includes(props.filterText.toLowerCase())) || (item.patientPolicy && item.patientPolicy.toLowerCase().includes(props.filterText.toLowerCase()))), );
-    const columns = [{name: 'Пациент', width: '230px', sortable: true, selector: row => row.patientName}, {
-        name: 'Полис пациента',
-        width: '210px',sortable: true, selector: row => row.patientPolicy
-    }, {
-        name: 'Эл. почта', width: '230px',sortable: true, selector: row => row.email
-    },
-        {name: 'Дата приема', width: '130px', sortable: true, selector: row => row.uziDate},
+
+    const customStyles = {
+        headRow: {
+            style: {
+                backgroundColor: '#f8f9fa',
+                borderBottomWidth: '2px',
+                borderBottomColor: '#e9ecef',
+                fontSize: '14px',
+                fontWeight: '600',
+            },
+        },
+        headCells: {
+            style: {
+                paddingLeft: '16px',
+                paddingRight: '16px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#2c3e50',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '16px',
+                paddingRight: '16px',
+                fontSize: '14px',
+            },
+        },
+        rows: {
+            style: {
+                backgroundColor: '#ffffff',
+                '&:not(:last-of-type)': {
+                    borderBottomColor: '#f1f3f4',
+                },
+                '&:hover': {
+                    backgroundColor: '#f8fdff',
+                },
+            },
+        },
+        pagination: {
+            style: {
+                backgroundColor: 'transparent',
+                borderTopColor: '#e9ecef',
+            },
+        },
+    };
+
+    const columns = [
         {
-            name: 'Диагноз', width: '160px', cell: (row) => renderChip2(row.hasNodules),
+            name: 'Пациент',
+            width: '230px',
+            sortable: true,
+            selector: row => row.patientName,
+            style: {
+                fontWeight: '500',
+            }
         },
         {
-            name: 'Статус', width: '160px', sortable: false, cell: (row) => renderChip(row.isActive),
+            name: 'Полис пациента',
+            width: '210px',
+            sortable: true,
+            selector: row => row.patientPolicy
+        },
+        {
+            name: 'Эл. почта',
+            width: '230px',
+            sortable: true,
+            selector: row => row.email
+        },
+        {
+            name: 'Дата приема',
+            width: '130px',
+            sortable: true,
+            selector: row => row.uziDate
+        },
+        {
+            name: 'Диагноз',
+            width: '160px',
+            cell: (row) => renderChip2(row.hasNodules),
+        },
+        {
+            name: 'Статус',
+            width: '160px',
+            sortable: false,
+            cell: (row) => renderChip(row.isActive),
         },
         {
             name: '',
@@ -68,52 +177,80 @@ const MyGrid = (props) => {
             cell: (row) => renderDetailsButton(row.id),
             disableColumnMenu: true,
         },
-        //     {
-        //     name: '',
-        //     width: '30px',
-        //     sortable: false,
-        //     cell: (row) => renderDeleteButton(row.id),
-        //     disableColumnMenu: true,
-        // },
     ];
+
     const renderDetailsButton = (params) => {
-        return (<strong>
-            <Button className={'seventh-step'}
-                    component={Link}
-                    to={'/patient/' + params}
-                    variant="outlined"
-                    size={'small'}
-                    style={{marginLeft: 16,width: 100, color: '#4FB3EAFF'}}
+        return (
+            <Button
+                className={'seventh-step'}
+                component={Link}
+                to={'/patient/' + params}
+                variant="outlined"
+                size={'small'}
+                sx={{
+                    marginLeft: 2,
+                    width: '100%',
+                    maxWidth: 150,
+                    color: '#4FB3EAFF',
+                    borderColor: '#4FB3EAFF',
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    fontWeight: '500',
+                    '&:hover': {
+                        backgroundColor: 'rgba(79, 179, 234, 0.1)',
+                        borderColor: '#4FB3EAFF',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(79, 179, 234, 0.2)'
+                    },
+                    transition: 'all 0.2s ease'
+                }}
             >
-                Карта
+                Карта пациента
             </Button>
-        </strong>)
-    }
-    const renderChip = (params) => {
-        return (<strong>
-            <Chip className={'fourth-step'}
-                  size={'small'}
-                  style={{marginLeft: 16, borderColor: params? '#4FB3EAFF': '#a6bac4'}}
-                  label={params ? "Активен" : "Не активен"}
-                  sx={{color: params? '#4FB3EAFF': '#a6bac4'}}
-                  variant={'outlined'}
-            >
-            </Chip>
-        </strong>)
-    }
-    const renderChip2 = (params) => {
-        return (<strong>
-            <Chip className={'fifth-step'}
-                  size={'small'}
-                  style={{marginLeft: 16, borderColor: params? '#4FB3EAFF': '#a6bac4'}}
-                  label={params ? "Обнаружено" : "Не Обнаружено"}
-                  sx={{color: params? '#4FB3EAFF': '#a6bac4'}}
-                  variant={'outlined'}
-            >
-            </Chip>
-        </strong>)
+        )
     }
 
+    const renderChip = (params) => {
+        return (
+            <Chip
+                className={'fourth-step'}
+                size={'small'}
+                label={params ? "Активен" : "Не активен"}
+                variant={'outlined'}
+                sx={{
+                    marginLeft: 2,
+                    borderColor: params ? '#00d995' : '#ff6b6b',
+                    color: params ? '#00d995' : '#ff6b6b',
+                    fontWeight: '500',
+                    backgroundColor: params ? 'rgba(0, 217, 149, 0.1)' : 'rgba(255, 107, 107, 0.1)',
+                    '& .MuiChip-label': {
+                        px: 1.5
+                    }
+                }}
+            />
+        )
+    }
+
+    const renderChip2 = (params) => {
+        return (
+            <Chip
+                className={'fifth-step'}
+                size={'small'}
+                label={params ? "Обнаружено" : "Не обнаружено"}
+                variant={'outlined'}
+                sx={{
+                    marginLeft: 2,
+                    borderColor: params ? '#4FB3EAFF' : '#95a5a6',
+                    color: params ? '#4FB3EAFF' : '#95a5a6',
+                    fontWeight: '500',
+                    backgroundColor: params ? 'rgba(79, 179, 234, 0.1)' : 'rgba(149, 165, 166, 0.1)',
+                    '& .MuiChip-label': {
+                        px: 1.5
+                    }
+                }}
+            />
+        )
+    }
 
     useEffect(() => {
         var storedNames = JSON.parse(localStorage.getItem("names"));
@@ -133,15 +270,21 @@ const MyGrid = (props) => {
 
     }, [props.url])
 
-    return (<div style={{width:'100%'}}>
-        <DataTable className={'third-step'}
-                   columns={columns}
-                   data={filteredItems}
-                   pagination
-                   persistTableHead
-                   paginationComponentOptions={paginationComponentOptions}
-        />
-    </div>)
+    return (
+        <Box sx={{width: '100%', borderRadius: 3, overflow: 'hidden'}}>
+            <DataTable
+                className={'third-step'}
+                columns={columns}
+                data={filteredItems}
+                pagination
+                persistTableHead
+                paginationComponentOptions={paginationComponentOptions}
+                customStyles={customStyles}
+                highlightOnHover
+                pointerOnHover
+            />
+        </Box>
+    )
 }
 
 class PatientTable extends React.Component {
@@ -157,8 +300,8 @@ class PatientTable extends React.Component {
             job: "",
             mesAm: 0
         };
-        //this.handleInformation()
     }
+
     componentDidMount() {
         this.handleInformation()
     }
@@ -179,78 +322,202 @@ class PatientTable extends React.Component {
                         this.setState({
                             mesAm: response.data.count
                         })
-                        //console.log(response.data)
                     })
                 }
             )
     }
+
     handleFilterText = (e) => {
         this.setState({
             filterText: e
         })
     }
+
     render() {
-        return (<FormControl sx={{height: '100%', width: '100%'}}>
-            <Box component={""} sx={{
-                backgroundColor: '#ffffff',
-                paddingLeft: 5,
-                paddingTop: 10,
-                borderTopLeftRadius: 130,
-                '&:hover': {
-                    backgroundColor: "#ffffff",
-                },
+        return (
+            <FormControl sx={{height: '100%', width: '100%', background: '#f8fdff'}}>
+                <Box sx={{
+                    minHeight: '100vh',
+                    padding: 10,
+                }}>
+                    {/* Header Section */}
+                    <Card
+                        className={'first-step'}
+                        sx={{
+                            mb: 4,
+                            borderRadius: 3,
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                            background: 'linear-gradient(135deg, #ffffff 0%, #f8fdff 100%)',
+                            border: '1px solid rgba(79, 179, 234, 0.1)'
+                        }}
+                    >
+                        <CardContent sx={{ p: 4 }}>
+                            <Grid container spacing={3} alignItems="center">
+                                <Grid item xs={12} md={8}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                        <Typography
+                                            variant="h4"
+                                            sx={{
+                                                fontWeight: '700',
+                                                color: '#2c3e50',
+                                                mr: 2,
+                                                background: 'linear-gradient(135deg, #4FB3EAFF, #1565C0)',
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent',
+                                                backgroundClip: 'text'
+                                            }}
+                                        >
+                                            {this.state.lastName + " " + this.state.firstName + " " + this.state.fathersName}
+                                        </Typography>
+                                        <IconButton
+                                            component={Link}
+                                            to={`/profile/edit/`}
+                                            sx={{
+                                                color: '#4FB3EAFF',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(79, 179, 234, 0.1)',
+                                                    transform: 'scale(1.1)'
+                                                },
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            <EditIcon className={'second-step'}/>
+                                        </IconButton>
+                                    </Box>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+                                        <Chip
+                                            label={this.state.medOrg}
+                                            size="small"
+                                            sx={{
+                                                backgroundColor: 'rgba(79, 179, 234, 0.1)',
+                                                color: '#4FB3EAFF',
+                                                fontWeight: '500'
+                                            }}
+                                        />
+                                        <Chip
+                                            label={this.state.job}
+                                            size="small"
+                                            sx={{
+                                                backgroundColor: 'rgba(0, 217, 149, 0.1)',
+                                                color: '#00d995',
+                                                fontWeight: '500'
+                                            }}
+                                        />
+                                        {this.state.is_remote_worker && (
+                                            <Chip
+                                                label="Удаленная работа"
+                                                size="small"
+                                                sx={{
+                                                    backgroundColor: 'rgba(255, 167, 38, 0.1)',
+                                                    color: '#FFA726',
+                                                    fontWeight: '500'
+                                                }}
+                                            />
+                                        )}
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12} md={4} sx={{ textAlign: { md: 'right' } }}>
+                                    <Badge
+                                        badgeContent={this.state.mesAm}
+                                        color="error"
+                                        sx={{
+                                            '& .MuiBadge-badge': {
+                                                backgroundColor: '#ff6b6b',
+                                                color: 'white',
+                                                fontWeight: '600'
+                                            }
+                                        }}
+                                    >
+                                        <Button
+                                            component={Link}
+                                            to="/inbox"
+                                            variant="outlined"
+                                            sx={{
+                                                color: '#4FB3EAFF',
+                                                borderColor: '#4FB3EAFF',
+                                                borderRadius: 2,
+                                                textTransform: 'none',
+                                                fontWeight: '500',
+                                                px: 3,
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(79, 179, 234, 0.1)',
+                                                    borderColor: '#4FB3EAFF'
+                                                }
+                                            }}
+                                        >
+                                            Сообщения
+                                        </Button>
+                                    </Badge>
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                    </Card>
 
-            }}>
-                <GlobalStyles styles={{
-                    h1: {color: 'dimgray', fontSize: 30, fontFamily: "Roboto", fontWeight: 'normal'},
-                    h2: {color: 'dimgray', fontSize: 20, fontFamily: "Roboto", marginBlock:0, fontWeight: 'normal'},
-                    h5: {color: 'dimgray', fontSize: 15, fontFamily: "Roboto",fontWeight:'lighter',marginBlock:5},
-                    h3: {color: 'dimgray', fontSize: 15, fontFamily: "Roboto", fontWeight:'normal', marginBlock:-1},
-                    h4: {color: 'dimgray', fontSize: 15, fontFamily: "Roboto", fontWeight:'normal', marginBlock:5, marginInline:4}
-                }}/>
-                <Box className={'first-step'} component={""}>
-                    <Grid component={""} container direction={'column'} sx={{paddingLeft: 2}}>
-                        <Grid component={""} item container direction={'row'}>
-                            <h2>{this.state.lastName+" "+this.state.firstName+" "+this.state.fathersName}</h2>
-                            <IconButton  component={Link} to={`/profile/edit/`} style={{maxWidth: '20px', maxHeight: '20px'}}
-                                         sx={{
-                                             paddingLeft: 3, '& svg': {
-                                                 fontSize: 20
-                                             },
-                                         }}>
-                                <EditIcon className={'second-step'}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid component={""} item container direction={'row'}>
-                            <h5>Медицинская организация:</h5>
-                            <h4>{ this.state.medOrg}, {this.state.job}</h4>
-                        </Grid>
-                    </Grid>
+                    {/* Patients Section */}
+                    <Card
+                        sx={{
+                            borderRadius: 3,
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                            border: '1px solid rgba(79, 179, 234, 0.1)'
+                        }}
+                    >
+                        <CardContent sx={{ p: 4 }}>
+                            {/* Header */}
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                mb: 4,
+                                flexWrap: 'wrap',
+                                gap: 2
+                            }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Typography
+                                        variant="h5"
+                                        sx={{
+                                            fontWeight: '600',
+                                            color: '#2c3e50',
+                                            background: 'linear-gradient(135deg, #2c3e50, #4FB3EAFF)',
+                                            WebkitBackgroundClip: 'text',
+                                            WebkitTextFillColor: 'transparent',
+                                            backgroundClip: 'text'
+                                        }}
+                                    >
+                                        Мои пациенты
+                                    </Typography>
+                                    <IconButton
+                                        component={Link}
+                                        to={`/patient/create`}
+                                        sx={{
+                                            backgroundColor: '#4FB3EAFF',
+                                            color: 'white',
+                                            '&:hover': {
+                                                backgroundColor: '#3a9bc8',
+                                                transform: 'scale(1.1)'
+                                            },
+                                            transition: 'all 0.2s ease',
+                                            boxShadow: '0 4px 12px rgba(79, 179, 234, 0.3)'
+                                        }}
+                                    >
+                                        <AddCircleOutlineIcon className={'eighth-step'} />
+                                    </IconButton>
+                                </Box>
+                                <FilterComponent
+                                    filterText={this.state.filterText}
+                                    onFilter={this.handleFilterText}
+                                />
+                            </Box>
+
+                            {/* Table */}
+                            <Box sx={{ minHeight: 470 }}>
+                                <MyGrid url={this.props.url} filterText={this.state.filterText}/>
+                            </Box>
+                        </CardContent>
+                    </Card>
                 </Box>
-                <Box component={""} sx={{paddingLeft: 2}} display={'flex'}>
-                    <h1>Мои пациенты</h1>
-                    <IconButton  component={Link} to={`/patient/create`}  style={{maxWidth: '30px', maxHeight: '30px'}}
-                                 sx={{
-                                     paddingLeft: 3, paddingTop: 5, '& svg': {
-                                         fontSize: 30
-                                     },
-                                 }}>
-                        <AddCircleOutlineIcon className={'eighth-step'}></AddCircleOutlineIcon>
-                    </IconButton>
-                    <FilterComponent filterText={this.state.filterText} onFilter={this.handleFilterText}/>
-                </Box>
-            </Box>
-            <Box component={""} sx={{
-                minHeight:470, height: 'auto',
-                backgroundColor: '#ffffff', paddingLeft: 5, paddingTop: 1, paddingBottom: 10,
-
-            }} display={'flow'}>
-
-                <MyGrid url={this.props.url} filterText={this.state.filterText}/>
-            </Box>
-        </FormControl>)
+            </FormControl>
+        )
     }
-
 }
 
 export default PatientTable;

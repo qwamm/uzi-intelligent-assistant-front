@@ -43,17 +43,19 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export const TextFieldWrapper = styled(TextField)`
     fieldset {
-        border-radius: 4px;
-        border-color: #4FB3EAFF;
-        border-width: 0.5px;
+        border-radius: 12px;
+        border-color: #E0E0E0;
+        border-width: 1px;
     }
-
-,
-& . MuiOutlinedInput-root {
-    &.Mui-focused fieldset {
-        border-color: #4FB3EAFF;
+    & .MuiOutlinedInput-root {
+        &.Mui-focused fieldset {
+            border-color: #1565C0;
+            border-width: 2px;
+        }
+        &:hover fieldset {
+            border-color: #1565C0;
+        }
     }
-}
 `;
 
 class SignInPage extends React.Component {
@@ -133,216 +135,289 @@ class SignInPage extends React.Component {
 
     render() {
         return (
-            <FormControl fullWidth fullHeight>
-                <Snackbar open={this.state.openSuccess} autoHideDuration={6000} onClose={this.handleClose}
-                          TransitionComponent={Slide}
-                          action={<IconButton
-                              aria-label="close"
-                              color="inherit"
-                              onClick={this.handleClose}
-                          >
-                              <CloseIcon/>
-                          </IconButton>}>
-                    <Alert severity="success" sx={{width: '100%', backgroundColor: '#00d995'}}
-                           onClose={this.handleClose}>Вход выполнен успешно!</Alert>
-                </Snackbar>
-                <Snackbar open={this.state.openError} autoHideDuration={6000} onClose={this.handleClose}
-                          TransitionComponent={Slide}
-                          action={<IconButton
-                              aria-label="close"
-                              color="inherit"
-                              onClick={this.handleClose}
-                          >
-                              <CloseIcon/>
-                          </IconButton>}>
-                    <Alert severity="error" sx={{width: '100%', backgroundColor: '#d9007b'}} onClose={this.handleClose}>Не удается войти в аккаунт</Alert>
-                </Snackbar>
-                <GlobalStyles styles={{
-                    h1: {color: '#4fb3ea', fontSize: 50, fontFamily: "Roboto"},
-                    h5: {color: 'dimgray', fontSize: 30, fontFamily: "Roboto", marginBlockEnd: 30},
-                    h3: {color: 'dimgray', fontSize: 15, fontFamily: "Roboto",fontWeight: 'normal', marginBlockEnd: 15}
-                }}/>
+            <Box sx={{
+                minHeight: '100vh',
+                background: 'linear-gradient(135deg, #1565C0 0%, #FF6D00 100%)',
+                margin: 0,
+                padding: 0,
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: '100vw',
+                height: '100vh',
+                overflow: 'auto'
+            }}>
+                <FormControl fullWidth fullHeight sx={{ margin: 0, padding: 0, height: '100%' }}>
+                    <Snackbar open={this.state.openSuccess} autoHideDuration={6000} onClose={this.handleClose}
+                              TransitionComponent={Slide}
+                              action={<IconButton
+                                  aria-label="close"
+                                  color="inherit"
+                                  onClick={this.handleClose}
+                              >
+                                  <CloseIcon/>
+                              </IconButton>}>
+                        <Alert severity="success" sx={{width: '100%', backgroundColor: '#00d995'}}
+                               onClose={this.handleClose}>Вход выполнен успешно!</Alert>
+                    </Snackbar>
+                    <Snackbar open={this.state.openError} autoHideDuration={6000} onClose={this.handleClose}
+                              TransitionComponent={Slide}
+                              action={<IconButton
+                                  aria-label="close"
+                                  color="inherit"
+                                  onClick={this.handleClose}
+                              >
+                                  <CloseIcon/>
+                              </IconButton>}>
+                        <Alert severity="error" sx={{width: '100%', backgroundColor: '#d9007b'}} onClose={this.handleClose}>Не удается войти в аккаунт</Alert>
+                    </Snackbar>
 
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: '100vh' }}>
-                    {/* Левая часть - заголовок */}
                     <Box sx={{
-                        flex: 1,
                         display: 'flex',
-                        alignItems: 'flex-start',
-                        justifyContent: 'flex-start',
-                        padding: 4,
-                        backgroundColor: '#f8fdff',
-                        paddingTop: 20,
-                        paddingLeft: 8
-                    }}>
-                            <Typography
-                                variant='h2'
-                                sx={{
-                                    textAlign: 'left',
-                                    maxWidth: 700,
-                                    fontSize: '3.2rem',
-                                    fontWeight: 'bold',
-                                    fontFamily: "Lato",
-                                    margin: 0,
-                                    color: '#4FB3EAFF',
-                                    lineHeight: 1.2
-                                }}
-                            >
-                                Интеллектуальный ассистент слепой диагностики узловых образований щитовидной железы
-                            </Typography>
-                    </Box>
-
-                    {/* Правая часть - форма входа */}
-                    <Box sx={{
-                        flex: 1,
-                        backgroundColor: '#ffffff',
-                        padding: 8,
-                        borderTopLeftRadius: 130,
-                        borderBottomLeftRadius: 130,
-                        boxShadow: "0px 0px 30px rgba(0,0,0,0.1)",
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
+                        flexDirection: { xs: 'column', md: 'row' },
                         minHeight: '100vh',
-                        paddingTop: 12,
-                        paddingLeft: 12
+                        margin: 0,
+                        padding: 0,
+                        width: '100%',
+                        height: '100%'
                     }}>
+                        {/* Левая часть - форма входа */}
                         <Box sx={{
-                            maxWidth: 400,
-                            margin: '0 auto',
-                            width: '100%',
-                            marginTop: 4,
-                            marginLeft: 4
+                            flex: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 4,
+                            position: 'relative',
+                            zIndex: 2
                         }}>
-                            <h5 style={{
-                                textAlign: 'left',
-                                marginBottom: 40,
-                                fontSize: '2rem',
-                                fontWeight: '600'
-                            }}>Вход в систему</h5>
-
-                            {/* Поле email */}
-                            <Box sx={{ paddingBottom: 3 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel shrink sx={{
-                                        marginBlockEnd: 1,
-                                        fontSize: '1rem',
-                                        fontWeight: '500',
-                                        color: 'dimgray'
-                                    }}>
-                                        Электронная почта
-                                    </InputLabel>
-                                    <TextFieldWrapper
-                                        value={this.state.email}
-                                        onChange={this.handleEmail}
-                                        variant='outlined'
-                                        placeholder="example@mail.ru"
-                                        sx={{ marginBlockStart: 1 }}
-                                    />
-                                </FormControl>
-                            </Box>
-
-                            {/* Поле пароля */}
-                            <Box sx={{ paddingBottom: 4 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel shrink sx={{
-                                        marginBlockEnd: 1,
-                                        fontSize: '1rem',
-                                        fontWeight: '500',
-                                        color: 'dimgray'
-                                    }}>
-                                        Пароль
-                                    </InputLabel>
-                                    <TextFieldWrapper
-                                        value={this.state.password}
-                                        onChange={this.handlePassword}
-                                        variant='outlined'
-                                        type={this.state.showPassword ? "text" :"password"}
-                                        placeholder="Введите ваш пароль"
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        aria-label="toggle password visibility"
-                                                        onClick={this.handleClickShowPassword}
-                                                        onMouseDown={this.handleMouseDownPassword}
-                                                        edge="end"
-                                                    >
-                                                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            )
-                                        }}
-                                        sx={{ marginBlockStart: 1 }}
-                                    />
-                                </FormControl>
-                            </Box>
-
-                            {/* Кнопка входа */}
-                            <Box sx={{ paddingBottom: 3 }}>
-                                <FormControl fullWidth>
-                                    <Button
-                                        disabled={!(this.state.emailEntered && this.state.passwordEntered && this.state.email.length !== 0 && this.state.password.length)}
+                            <Box sx={{
+                                maxWidth: 450,
+                                width: '100%',
+                                padding: 6,
+                                background: 'white',
+                                borderRadius: '24px',
+                                boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+                            }}>
+                                {/* Заголовок формы */}
+                                <Box sx={{ textAlign: 'center', mb: 6 }}>
+                                    <Typography
+                                        variant="h3"
                                         sx={{
-                                            color: '#ffffff',
-                                            backgroundColor: '#4FB3EAFF',
-                                            '&:hover': {
-                                                backgroundColor: '#3a9bc8'
-                                            },
-                                            '&:disabled': {
-                                                backgroundColor: '#cccccc',
-                                                color: '#666666'
-                                            },
-                                            fontFamily: 'Roboto',
-                                            fontWeight: '500',
-                                            fontSize: '1.1rem',
-                                            padding: '12px 24px',
-                                            borderRadius: '8px',
-                                            textTransform: 'none',
-                                            boxShadow: '0px 4px 12px rgba(79, 179, 234, 0.3)'
+                                            fontWeight: '700',
+                                            color: '#2c3e50',
+                                            fontSize: '2.5rem',
+                                            mb: 2,
+                                            background: 'black',
+                                            WebkitBackgroundClip: 'text',
+                                            WebkitTextFillColor: 'transparent',
+                                            backgroundClip: 'text'
                                         }}
-                                        variant={'contained'}
-                                        onClick={this.handleResponse}
                                     >
-                                        Войти в систему
-                                    </Button>
-                                </FormControl>
-                            </Box>
+                                        Добро пожаловать
+                                    </Typography>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            color: '#7f8c8d',
+                                            fontWeight: '400',
+                                            fontSize: '1.1rem'
+                                        }}
+                                    >
+                                        Войдите в свою учетную запись
+                                    </Typography>
+                                </Box>
 
-                            {/* Ссылка на регистрацию */}
+                                {/* Поле email */}
+                                <Box sx={{ mb: 4 }}>
+                                    <FormControl fullWidth>
+                                        <TextFieldWrapper
+                                            value={this.state.email}
+                                            onChange={this.handleEmail}
+                                            variant='outlined'
+                                            placeholder="Введите вашу электронную почту"
+                                            sx={{
+                                                marginBlockStart: 1,
+                                                '& .MuiOutlinedInput-input': {
+                                                    padding: '16px 20px',
+                                                    fontSize: '16px'
+                                                }
+                                            }}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <Box sx={{
+                                                            color: '#1565C0',
+                                                            fontSize: '20px',
+                                                            mr: 1
+                                                        }}>
+                                                            ✉️
+                                                        </Box>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                    </FormControl>
+                                </Box>
+
+                                {/* Поле пароля */}
+                                <Box sx={{ mb: 4 }}>
+                                    <FormControl fullWidth>
+                                        <TextFieldWrapper
+                                            value={this.state.password}
+                                            onChange={this.handlePassword}
+                                            variant='outlined'
+                                            type={this.state.showPassword ? "text" :"password"}
+                                            placeholder="Введите ваш пароль"
+                                            sx={{
+                                                marginBlockStart: 1,
+                                                '& .MuiOutlinedInput-input': {
+                                                    padding: '16px 20px',
+                                                    fontSize: '16px'
+                                                }
+                                            }}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <Box sx={{
+                                                            color: '#1565C0',
+                                                            fontSize: '20px',
+                                                            mr: 1
+                                                        }}>
+                                                            🔒
+                                                        </Box>
+                                                    </InputAdornment>
+                                                ),
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            aria-label="toggle password visibility"
+                                                            onClick={this.handleClickShowPassword}
+                                                            onMouseDown={this.handleMouseDownPassword}
+                                                            edge="end"
+                                                            sx={{ color: '#1565C0' }}
+                                                        >
+                                                            {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                    </FormControl>
+                                </Box>
+
+                                {/* Кнопка входа */}
+                                <Box sx={{ mb: 4 }}>
+                                    <FormControl fullWidth>
+                                        <Button
+                                            disabled={!(this.state.emailEntered && this.state.passwordEntered && this.state.email.length !== 0 && this.state.password.length)}
+                                            sx={{
+                                                color: '#ffffff',
+                                                background: 'linear-gradient(135deg, #1565C0, #FF6D00)',
+                                                '&:hover': {
+                                                    background: 'linear-gradient(135deg, #0D47A1, #E65100)',
+                                                    transform: 'translateY(-2px)',
+                                                    boxShadow: '0 8px 25px rgba(255, 109, 0, 0.4)'
+                                                },
+                                                '&:disabled': {
+                                                    background: '#ecf0f1',
+                                                    color: '#bdc3c7',
+                                                    transform: 'none',
+                                                    boxShadow: 'none'
+                                                },
+                                                fontFamily: 'Roboto',
+                                                fontWeight: '600',
+                                                fontSize: '1.1rem',
+                                                padding: '16px 32px',
+                                                borderRadius: '12px',
+                                                textTransform: 'none',
+                                                boxShadow: '0 4px 15px rgba(255, 109, 0, 0.3)',
+                                                transition: 'all 0.3s ease',
+                                                height: '56px'
+                                            }}
+                                            variant={'contained'}
+                                            onClick={this.handleResponse}
+                                        >
+                                            Войти в систему
+                                        </Button>
+                                    </FormControl>
+                                </Box>
+
+                                {/* Ссылка на регистрацию */}
+                                <Box sx={{
+                                    textAlign: 'center',
+                                    paddingTop: 3
+                                }}>
+                                    <Typography
+                                        sx={{
+                                            color: '#7f8c8d',
+                                            display: 'inline',
+                                            mr: 1
+                                        }}
+                                    >
+                                        Нет учетной записи?
+                                    </Typography>
+                                    <Button
+                                        component={Link}
+                                        to={`/sign_up`}
+                                        sx={{
+                                            textTransform: 'none',
+                                            color: '#1565C0',
+                                            fontFamily: 'Roboto',
+                                            fontWeight: '600',
+                                            fontSize: '1rem',
+                                            padding: '4px 8px',
+                                            minWidth: 'auto',
+                                            '&:hover': {
+                                                backgroundColor: 'rgba(21, 101, 192, 0.1)',
+                                                textDecoration: 'none',
+                                                borderRadius: '6px'
+                                            }
+                                        }}
+                                        variant='text'
+                                    >
+                                        Зарегистрироваться
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Box>
+
+                        {/* Правая часть - информационная */}
+                        <Box sx={{
+                            flex: 1,
+                            display: { xs: 'none', md: 'flex' },
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 8,
+                            position: 'relative',
+                            zIndex: 1
+                        }}>
                             <Box sx={{
                                 textAlign: 'left',
-                                paddingTop: 3
+                                maxWidth: 900,
                             }}>
-                                <h3 style={{
-                                    display: 'inline',
-                                    marginRight: 8
-                                }}>Нет учетной записи?</h3>
-                                <Button
-                                    component={Link}
-                                    to={`/sign_up`}
+                                <Typography
+                                    variant='h1'
                                     sx={{
-                                        textTransform: 'none',
-                                        color: '#4FB3EAFF',
-                                        fontFamily: 'Roboto',
-                                        fontWeight: '500',
-                                        fontSize: '1rem',
-                                        padding: 0,
-                                        minWidth: 'auto',
-                                        '&:hover': {
-                                            backgroundColor: 'transparent',
-                                            textDecoration: 'underline'
-                                        }
+                                        fontSize: '3.5rem',
+                                        fontWeight: '800',
+                                        fontFamily: "Lato",
+                                        color: 'white',
+                                        lineHeight: 1.2,
+                                        mb: 4,
+                                        textShadow: '0 4px 20px rgba(0,0,0,0.2)'
                                     }}
-                                    variant='text'
                                 >
-                                    Зарегистрироваться
-                                </Button>
+                                    Интеллектуальный ассистент УЗИ диагностики новообразований щитовидной железы
+                                </Typography>
                             </Box>
                         </Box>
                     </Box>
-                </Box>
-            </FormControl>)
+                </FormControl>
+            </Box>
+        )
     }
 }
 

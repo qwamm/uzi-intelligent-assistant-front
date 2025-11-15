@@ -21,16 +21,29 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import {jwtDecode} from "jwt-decode";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 
 const theme = createTheme()
 export const TextFieldWrapper = styled(TextField)`
-  fieldset {
-    border-radius: 10px;
-    border-color: #4FB3EAFF;
-    border-width: 1px;
-  }
+    fieldset {
+        border-radius: 12px;
+        border-color: #E0E0E0;
+        border-width: 1px;
+    }
+    & .MuiOutlinedInput-root {
+        &.Mui-focused fieldset {
+            border-color: #4FB3EAFF;
+            border-width: 2px;
+        }
+        &:hover fieldset {
+            border-color: #4FB3EAFF;
+        }
+    }
 `;
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -50,7 +63,7 @@ class UploadPage extends React.Component {
             deviceChosen: false,
             projectionChosen: false,
             patientChosen: false,
-            typeText: "Выберите файл в формате .png или .tiff",
+            typeText: "Выберите файл в формате .tif, .jpg, .jpeg или .png",
             imageFile: "",
             imageChoosen: false,
             patients: [],
@@ -144,17 +157,6 @@ class UploadPage extends React.Component {
                     }
                 ).catch((er) => {
                 console.log(er)
-                // if(er.status === 401){
-                //     const formData = new FormData()
-                //     formData.append('refresh', localStorage.getItem('refresh'))
-                //     axios.post(this.props.url + "/auth/token/refresh/?format=json", formData).then((response) => {
-                //         localStorage.setItem('access', response.data.access.toString())
-                //         this.context.setSignIn(false)
-                //         localStorage.setItem('id', jwt_decode(response.data.access.toString()).user_id)
-                //     }).catch(() => {
-                //         this.context.setSignIn(true)
-                //     })
-                // }
             });
         }
 
@@ -188,26 +190,14 @@ class UploadPage extends React.Component {
             this.setState({
                 resultid: response.data.image_id,
             })
-            // var storedNames = JSON.parse(localStorage.getItem("names"));
-            // if (storedNames === null) {
-            //     storedNames = []
-            // }
-            // for (let tmp of storedNames) {
-            //     if (tmp === response.data.image_id) {
-            //         return;
-            //     }
-            // }
             if (response.data.image_id !== 0){
-                // storedNames.push(response.data.image_id)
-                // //console.log(storedNames)
-                // localStorage.setItem("names", JSON.stringify(storedNames))
                 this.handleWhat();
                 this.setState({
                     uziDevice: null,
                     projectionType: '',
                     patientCard: null,
                     imageFile: null,
-                    typeText: "Выберите файл в формате .png или .tiff",
+                    typeText: "Выберите файл в формате .tif, .jpg, .jpeg или .png",
                     deviceName: {id: 0, name: ""},
                     patient:{id:0, last_name: "", first_name: "", fathers_name:"", personal_policy: ""},
                     deviceChosen: false,
@@ -215,7 +205,6 @@ class UploadPage extends React.Component {
                     patientChosen: false,
                     imageChoosen: false
                 })
-                //this.inputField.value = null
             }
 
         })
@@ -242,7 +231,7 @@ class UploadPage extends React.Component {
 
     render() {
         return (
-            <FormControl fullWidth sx={{height: '100%', width: '100%'}}>
+            <FormControl fullWidth sx={{position: 'fixed', top: '50%', right: 0, bottom: 0, background: '#f8fdff', alignItems: 'center',  justifyContent: 'center'}}>
                 <Snackbar  open={this.state.openSuccess} autoHideDuration={6000} onClose={this.handleClose}
                            TransitionComponent={Slide}
                            action={
@@ -267,264 +256,353 @@ class UploadPage extends React.Component {
                                </IconButton>}>
                     <Alert severity="error" sx={{width:'100%',backgroundColor: '#d9007b'}} onClose={this.handleClose}>Снимок не загружен. Проверьте формат загружаемого файла.</Alert>
                 </Snackbar>
-                <Box component={""} sx={{
-                    backgroundColor: '#ffffff',
-                    paddingLeft: 40,
-                    paddingTop: 15,
-                    borderTopLeftRadius: 130,
-                    height: 'auto',
-                    minHeight: 600,
-                    width: 'auto',
-                    minWidth: 500,
-                    '&:hover': {
-                        backgroundColor: "#ffffff",
-                    }
-                }} display={'flex'} color={theme.palette.secondary.contrastText}>
-                    <Grid component={""} container direction={'row'} spacing={25}>
-                        <Grid component={""} item  xs justifyItems={'center'}>
-                            <Box className="zero-step" component={""} sx={{display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center'}}>
-                                <GlobalStyles styles={{
-                                    h1: {color: 'dimgray', fontSize: 40, fontFamily: "Roboto", fontWeight: 'lighter',},
-                                    h5: {color: 'dimgray', fontSize: 10, fontFamily: "Roboto"}
-                                }}/>
-                                <h1>Новый снимок УЗИ</h1>
-                                <Box  className='first-step' component={""} sx={{width: 400, borderRadius: 3}}>
-                                    <FormControl variant={'outlined'} fullWidth >
-                                        <Autocomplete
-                                            id="devices"
-                                            sx={{width: 400}}
-                                            options={this.state.devices}
-                                            autoHighlight
-                                            onChange={this.handleChooseDevice}
-                                            value={this.state.deviceName}
-                                            style={{whiteSpace: 'normal'}}
-                                            getOptionLabel={(option) => option.name}
-                                            isOptionEqualToValue={(option, value) => option.id === value.id}
-                                            renderOption={(props, option) => (
-                                                <Box component="li" {...props} sx={{maxHeight: 40}}>
-                                                    <GlobalStyles styles={{
-                                                        h6: {
-                                                            color: 'dimgray',
-                                                            fontSize: 15,
-                                                            fontFamily: "Roboto",
-                                                            fontWeight: "lighter"
-                                                        },
-                                                        h7: {
-                                                            color: 'dimgray',
-                                                            fontSize: 15,
-                                                            fontFamily: "Roboto",
-                                                            fontWeight: "bolder"
-                                                        }
-                                                    }}/>
-                                                    {option.name}
-                                                </Box>
-                                            )}
-                                            renderInput={(params) => (
-                                                <TextFieldWrapper
-                                                    {...params}
-                                                    multiline
-                                                    label="Аппарат"
-                                                    variant='outlined'
-                                                    inputProps={{
-                                                        ...params.inputProps,
-                                                    }}
-                                                />
-                                            )}
-                                        />
-                                    </FormControl>
-                                </Box>
-                                <Box component={""} sx={{width: 300, paddingBottom: 5}}></Box>
-                                <Box className='second-step' component={""} sx={{width: 400, borderRadius: 3}}>
-                                    <FormControl variant={'outlined'} fullWidth>
-                                        <TextFieldWrapper
-                                            value={this.state.projectionType}
-                                            label="Тип проекции"
-                                            onChange={this.handleChooseProjection}
-                                            variant='outlined'
-                                            select
+
+                <Box sx={{ minHeight: '100vh', padding: 4 }}>
+                    <Grid container spacing={4}>
+                        {/* Левая часть - форма */}
+                        <Grid item xs={12} md={6}>
+                            <Card
+                                sx={{
+                                    borderRadius: 3,
+                                    boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                                    border: '1px solid rgba(79, 179, 234, 0.1)',
+                                    height: 'fit-content'
+                                }}
+                            >
+                                <CardContent sx={{ p: 4 }}>
+                                    <Box className="zero-step" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                        <Typography
+                                            variant="h4"
+                                            sx={{
+                                                fontWeight: '700',
+                                                color: '#2c3e50',
+                                                mb: 4,
+                                                textAlign: 'center',
+                                                background: 'linear-gradient(135deg, #4FB3EAFF, #1565C0)',
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent',
+                                                backgroundClip: 'text'
+                                            }}
                                         >
-                                            <MenuItem value={"cross"}>Поперечная</MenuItem>
-                                            <MenuItem value={"long"}>Продольная</MenuItem>
-                                        </TextFieldWrapper>
-                                    </FormControl>
-                                </Box>
-                                <Box component={""} sx={{width: 300, paddingBottom: 5}}></Box>
+                                            Новый снимок УЗИ
+                                        </Typography>
 
+                                        {/* Выбор аппарата */}
+                                        <Box className='first-step' sx={{ width: '100%', mb: 4 }}>
+                                            <FormControl variant={'outlined'} fullWidth>
+                                                <Autocomplete
+                                                    id="devices"
+                                                    options={this.state.devices}
+                                                    autoHighlight
+                                                    onChange={this.handleChooseDevice}
+                                                    value={this.state.deviceName}
+                                                    getOptionLabel={(option) => option.name}
+                                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                    renderOption={(props, option) => (
+                                                        <Box component="li" {...props} sx={{ py: 1 }}>
+                                                            <Typography variant="body1">
+                                                                {option.name}
+                                                            </Typography>
+                                                        </Box>
+                                                    )}
+                                                    renderInput={(params) => (
+                                                        <TextFieldWrapper
+                                                            {...params}
+                                                            label="Аппарат"
+                                                            variant='outlined'
+                                                            placeholder="Выберите аппарат"
+                                                            inputProps={{
+                                                                ...params.inputProps,
+                                                            }}
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Box>
 
-                                <Box className='third-step' component={""} sx={{width: 400, borderRadius: 3}}>
-                                    <FormControl variant={'outlined'} fullWidth>
-                                        <Autocomplete
-                                            id="patients"
-                                            sx={{width: 400}}
-                                            options={this.state.patients}
-                                            value={this.state.patient}
-                                            autoHighlight
-                                            disableClearable
-                                            onChange={this.handleChoosePatient}
-                                            style={{whiteSpace: 'normal'}}
-                                            getOptionLabel={(option) => option.personal_policy === ""? "" : option.last_name + ' ' + option.first_name + ' ' + option.fathers_name + ' ' + option.personal_policy}
-                                            isOptionEqualToValue={(option, value) => option.personal_policy === value.personal_policy}
-                                            renderOption={(props, option) => (
-                                                <Box sx={{width:400}} component="li" {...props} display={'flex'}>
-                                                    <GlobalStyles styles={{
-                                                        h6: {
-                                                            color: 'black',
-                                                            fontSize: 15,
-                                                            fontFamily: "Roboto",
-                                                            fontWeight: "lighter",
-                                                            display: 'inline',
-                                                            minWidth: 150
-                                                        },
-                                                        h3: {
-                                                            color: 'black',
-                                                            fontSize: 15,
-                                                            fontFamily: "Roboto",
-                                                            fontWeight: 'normal',
-                                                            marginInline: 5,
-                                                            minWidth: 170
-                                                        }
-                                                    }}/>
-                                                    <h3>{option.data.last_name} {option.data.first_name} {option.data.fathers_name}</h3>
-                                                    <h6>{option.data.personal_policy}</h6>
-                                                    <IconButton component={Link} to={`/patient/edit/${option.id}`}
-                                                                aria-label="close"
-                                                    >
-                                                        <EditIcon/>
-                                                    </IconButton>
-                                                </Box>
-                                            )}
-                                            renderInput={(params) => (
+                                        {/* Выбор проекции */}
+                                        <Box className='second-step' sx={{ width: '100%', mb: 4 }}>
+                                            <FormControl variant={'outlined'} fullWidth>
                                                 <TextFieldWrapper
-                                                    {...params}
-                                                    multiline
-                                                    label="Пациент"
+                                                    value={this.state.projectionType}
+                                                    label="Тип проекции"
+                                                    onChange={this.handleChooseProjection}
                                                     variant='outlined'
-                                                    inputProps={{
-                                                        ...params.inputProps,
+                                                    select
+                                                    fullWidth
+                                                >
+                                                    <MenuItem value={"cross"}>Поперечная</MenuItem>
+                                                    <MenuItem value={"long"}>Продольная</MenuItem>
+                                                </TextFieldWrapper>
+                                            </FormControl>
+                                        </Box>
+
+                                        {/* Выбор пациента */}
+                                        <Box className='third-step' sx={{ width: '100%', mb: 3 }}>
+                                            <FormControl variant={'outlined'} fullWidth>
+                                                <Autocomplete
+                                                    id="patients"
+                                                    options={this.state.patients}
+                                                    value={this.state.patient}
+                                                    autoHighlight
+                                                    disableClearable
+                                                    onChange={this.handleChoosePatient}
+                                                    getOptionLabel={(option) => option.personal_policy === ""? "" : option.last_name + ' ' + option.first_name + ' ' + option.fathers_name + ' ' + option.personal_policy}
+                                                    isOptionEqualToValue={(option, value) => option.personal_policy === value.personal_policy}
+                                                    renderOption={(props, option) => (
+                                                        <Box component="li" {...props} sx={{ py: 1, width: '100%' }}>
+                                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                                                <Box>
+                                                                    <Typography variant="body1" fontWeight="500">
+                                                                        {option.data.last_name} {option.data.first_name} {option.data.fathers_name}
+                                                                    </Typography>
+                                                                    <Typography variant="body2" color="text.secondary">
+                                                                        {option.data.personal_policy}
+                                                                    </Typography>
+                                                                </Box>
+                                                                <IconButton
+                                                                    component={Link}
+                                                                    to={`/patient/edit/${option.id}`}
+                                                                    size="small"
+                                                                    sx={{
+                                                                        color: '#4FB3EAFF',
+                                                                        '&:hover': {
+                                                                            backgroundColor: 'rgba(79, 179, 234, 0.1)'
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <EditIcon fontSize="small"/>
+                                                                </IconButton>
+                                                            </Box>
+                                                        </Box>
+                                                    )}
+                                                    renderInput={(params) => (
+                                                        <TextFieldWrapper
+                                                            {...params}
+                                                            label="Пациент"
+                                                            variant='outlined'
+                                                            placeholder="Выберите пациента"
+                                                            inputProps={{
+                                                                ...params.inputProps,
+                                                            }}
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Box>
+
+                                        {/* Кнопка добавления пациента */}
+                                        <Box sx={{ width: '100%' }}>
+                                            <FormControl fullWidth>
+                                                <Button
+                                                    className={'third-half-step'}
+                                                    component={Link}
+                                                    to={`/patient/create`}
+                                                    sx={{
+                                                        color: '#4FB3EAFF',
+                                                        backgroundColor: 'rgba(79, 179, 234, 0.1)',
+                                                        '&:hover': {
+                                                            backgroundColor: 'rgba(79, 179, 234, 0.2)',
+                                                            transform: 'translateY(-1px)'
+                                                        },
+                                                        fontFamily: 'Roboto',
+                                                        fontWeight: '500',
+                                                        textTransform: 'none',
+                                                        borderRadius: 2,
+                                                        py: 1,
+                                                        transition: 'all 0.2s ease'
+                                                    }}
+                                                    variant={'text'}
+                                                >
+                                                    + Добавить нового пациента
+                                                </Button>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+
+                        {/* Правая часть - загрузка файла */}
+                        <Grid item xs={12} md={6}>
+                            <Card
+                                sx={{
+                                    borderRadius: 3,
+                                    boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                                    border: '1px solid rgba(79, 179, 234, 0.1)',
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}
+                            >
+                                <CardContent sx={{ p: 4, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{
+                                                fontWeight: '600',
+                                                color: '#2c3e50',
+                                                mb: 2
+                                            }}
+                                        >
+                                            Загрузка снимка
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: '#7f8c8d',
+                                                mb: 3
+                                            }}
+                                        >
+                                            Поддерживаемые форматы: .tif, .jpg, .jpeg, .png
+                                        </Typography>
+                                    </Box>
+
+                                    {/* Область загрузки файла */}
+                                    <Box sx={{ position: 'relative', mb: 3 }}>
+                                        <input
+                                            type='file'
+                                            ref={this.state.ref}
+                                            onChange={this.handleUploadFile}
+                                            style={{ display: 'none' }}
+                                            accept=".tif,.tiff,.jpg,.jpeg,.png"
+                                        />
+                                        <IconButton
+                                            onClick={() => this.state.ref.current.click()}
+                                            disabled={!this.state.deviceChosen || !this.state.patientChosen || !this.state.projectionChosen}
+                                            sx={{
+                                                width: 120,
+                                                height: 120,
+                                                backgroundColor: this.state.imageChoosen ? 'rgba(0, 217, 149, 0.1)' : 'rgba(79, 179, 234, 0.1)',
+                                                border: `2px dashed ${this.state.imageChoosen ? '#00d995' : '#4FB3EAFF'}`,
+                                                borderRadius: 3,
+                                                '&:hover': {
+                                                    backgroundColor: this.state.imageChoosen ? 'rgba(0, 217, 149, 0.2)' : 'rgba(79, 179, 234, 0.2)',
+                                                    transform: 'scale(1.05)'
+                                                },
+                                                '&:disabled': {
+                                                    backgroundColor: '#f5f5f5',
+                                                    borderColor: '#e0e0e0',
+                                                    color: '#bdbdbd'
+                                                },
+                                                transition: 'all 0.3s ease'
+                                            }}
+                                        >
+                                            {this.state.loading ? (
+                                                <CircularProgress
+                                                    size={40}
+                                                    sx={{
+                                                        color: '#4FB3EAFF',
+                                                    }}
+                                                />
+                                            ) : (
+                                                <CloudUploadIcon
+                                                    sx={{
+                                                        fontSize: 48,
+                                                        color: this.state.imageChoosen ? '#00d995' : '#4FB3EAFF'
                                                     }}
                                                 />
                                             )}
-                                        />
-                                    </FormControl>
-                                </Box>
-                                <Box component={""} sx={{width: 400, paddingTop: 3}}>
-                                    <FormControl fullWidth>
-                                        <Button className={'third-half-step'} component={Link} to={`/patient/create`}
-                                                sx={{color: '#4fb3ea',
-                                                    backgroundColor: '#ffffff',
-                                                    '&:focus': {backgroundColor: '#4fb3ea'},
-                                                    fontStyle: {fontFamily: 'Roboto', fontColor: '#4fb3ea'}
-                                                }} variant={'text'} onClick={this.handleResponse}>
-                                            Добавить нового пациента
-                                        </Button>
-                                    </FormControl>
-                                </Box>
-                            </Box>
-                        </Grid>
-                        <Grid component={""} item xs container direction={'column'}
-                              alignItems="center" sx={{paddingRight: 10}}>
+                                        </IconButton>
+                                    </Box>
 
-                            <Box component={""} display="flex"
-                                 justifyContent="center"
-                                 alignItems="center"
-                                 sx={{height: 400}}>
-                                <Grid component={""} alignItems={'center'} justify={'center'} container direction={'column'}
-                                      spacing={0}>
-                                    <Grid component={""} item xs justify="center">
-                                        <input type='file'
-                                               ref={this.state.ref}
-                                            // ref={"inputField"}
-                                               onChange={this.handleUploadFile}
-                                               style={{display: 'none'}}
-                                            //multiple={true}
-                                        />
-                                        <IconButton style={{maxWidth: '83px', maxHeight: '83px'}}
-                                                    onClick={() => this.state.ref.current.click()}
-                                            //onClick={() => this.refs.inputField.click()}
-                                                    sx={{
-                                                        '& svg': {
-                                                            fontSize: 100
-                                                        }, '&:hover': {
-                                                            color: '#4fb3ea'
-                                                        }
-                                                    }
-                                                    }>
+                                    {/* Название файла */}
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: this.state.imageChoosen ? '#00d995' : '#bdbdbd',
+                                            fontWeight: this.state.imageChoosen ? '500' : 'normal',
+                                            textAlign: 'center',
+                                            mb: 4,
+                                            maxWidth: 300,
+                                            wordBreak: 'break-word'
+                                        }}
+                                    >
+                                        {this.state.typeText}
+                                    </Typography>
+
+                                    {/* Кнопки действий */}
+                                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+                                        <Button
+                                            className={'fifth-step'}
+                                            onClick={this.handleResult}
+                                            variant={'contained'}
+                                            disabled={!this.state.deviceChosen || !this.state.patientChosen || !this.state.projectionChosen || !this.state.imageChoosen}
+                                            sx={{
+                                                backgroundColor: 'linear-gradient(135deg, #4FB3EAFF, #1565C0)',
+                                                background: 'linear-gradient(135deg, #4FB3EAFF, #1565C0)',
+                                                color: '#ffffff',
+                                                '&:hover': {
+                                                    background: 'linear-gradient(135deg, #3a9bc8, #0D47A1)',
+                                                    transform: 'translateY(-2px)',
+                                                    boxShadow: '0 8px 25px rgba(79, 179, 234, 0.4)'
+                                                },
+                                                '&:disabled': {
+                                                    background: '#e0e0e0',
+                                                    color: '#9e9e9e',
+                                                    transform: 'none',
+                                                    boxShadow: 'none'
+                                                },
+                                                fontFamily: 'Roboto',
+                                                fontWeight: '600',
+                                                padding: '12px 24px',
+                                                borderRadius: 2,
+                                                textTransform: 'none',
+                                                minWidth: 180,
+                                                transition: 'all 0.3s ease'
+                                            }}
+                                        >
+                                            Провести диагностику
+                                        </Button>
+
+                                        <Button
+                                            className={'sixth-step'}
+                                            component={Link}
+                                            to={`/result/${this.state.resultid}`}
+                                            variant={'outlined'}
+                                            disabled={!this.state.result}
+                                            sx={{
+                                                color: '#4FB3EAFF',
+                                                borderColor: '#4FB3EAFF',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(79, 179, 234, 0.1)',
+                                                    borderColor: '#4FB3EAFF',
+                                                    transform: 'translateY(-2px)'
+                                                },
+                                                '&:disabled': {
+                                                    color: '#e0e0e0',
+                                                    borderColor: '#e0e0e0',
+                                                    transform: 'none'
+                                                },
+                                                fontFamily: 'Roboto',
+                                                fontWeight: '600',
+                                                padding: '12px 24px',
+                                                borderRadius: 2,
+                                                textTransform: 'none',
+                                                minWidth: 180,
+                                                transition: 'all 0.3s ease'
+                                            }}
+                                        >
                                             {this.state.loading && (
                                                 <CircularProgress
-                                                    size={70}
-                                                    sx={{ marginInline: 1, position: 'absolute', top: '50%',
-                                                        left: '50%',
-                                                        marginTop: '-34px',
-                                                        marginLeft: '-34px',
-                                                        zIndex: 1,
+                                                    size={20}
+                                                    sx={{
+                                                        marginRight: 1,
                                                         color: '#4FB3EAFF',
                                                     }}
                                                 />
                                             )}
-                                            <AddCircleOutlineIcon className={'fourth-step'}></AddCircleOutlineIcon>
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid component={""} item justify="center">
-                                        <GlobalStyles styles={{
-                                            h1: {color: 'dimgray', fontSize: 40, fontFamily: "Roboto"},
-                                            h5: {color: 'lightgray', fontSize: 14, fontFamily: "Roboto"}
-                                        }}/>
-                                        <Box component={""} display="flex"
-                                             justifyContent="center"
-                                             alignItems="center"
-
-                                        >
-                                            <h5 style={{fontWeight: 'lighter'}} align={'right'}>{this.state.typeText}</h5>
-                                        </Box>
-                                    </Grid>
-                                    <Grid component={""} item container direction={'column'}>
-                                        <GlobalStyles styles={{
-                                            h1: {color: 'dimgray', fontSize: 40, fontFamily: "Roboto"},
-                                            h5: {color: 'lightgray', fontSize: 14, fontFamily: "Roboto"}
-                                        }}/>
-                                        <Box component={""}
-                                             display={'inline-flex'}
-                                        >
-                                            <Button className={'fifth-step'} sx={{
-                                                color: '#4fb3ea',
-                                                '&:focus': {backgroundColor: '#4fb3ea'},
-                                            }} onClick={this.handleResult} variant={'outlined'} disabled={!this.state.deviceChosen||!this.state.patientChosen||!this.state.projectionChosen||!this.state.imageChoosen}>
-                                                Провести диагностику
-                                            </Button>
-                                            <Box component={""} sx={{width: 10}}></Box>
-                                            <Button className={'sixth-step'} component={Link} to={`/result/${this.state.resultid}`} sx={{
-                                                color: '#4fb3ea',
-                                                '&:focus': {backgroundColor: '#4fb3ea'},
-
-                                            }} variant={'outlined'} disabled={!this.state.result}>
-                                                {this.state.loading && (
-                                                    <CircularProgress
-                                                        size={24}
-                                                        sx={{ marginInline: 1, position: 'absolute', top: '50%',
-                                                            left: '50%',
-                                                            marginTop: '-12px',
-                                                            marginLeft: '-12px',
-                                                            zIndex: 1,
-                                                            color: '#4FB3EAFF',
-                                                        }}
-                                                    />
-                                                )}
-                                                Посмотреть результат
-                                            </Button>
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-
-                            </Box>
+                                            Посмотреть результат
+                                        </Button>
+                                    </Box>
+                                </CardContent>
+                            </Card>
                         </Grid>
                     </Grid>
-
                 </Box>
             </FormControl>
         )
-
     }
 }
-
 
 export default UploadPage;

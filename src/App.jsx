@@ -273,7 +273,7 @@ function App(props) {
                         }}>
                             <Box
                                 component="img"
-                                src="static/header.svg"
+                                src="/static/header.svg"
                                 alt="Второе мнение"
                                 sx={{
                                     position: 'absolute',
