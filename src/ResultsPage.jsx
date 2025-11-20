@@ -201,11 +201,11 @@ const MyDocument = (props) => (
 
 const theme = createTheme()
 export const TextFieldResult = styled(TextField)`
-  fieldset {
-    border-radius: 10px;
-    border-color: #4FB3EAFF;
-    border-width: 1px;
-  }
+    fieldset {
+        border-radius: 10px;
+        border-color: #4FB3EAFF;
+        border-width: 1px;
+    }
 
 ,
 '& label': marginLeft: "100%",
@@ -343,32 +343,6 @@ class ResultsPage extends React.Component {
             .then((response) => {
                 this.setState({startData: response.data.info})
                 console.log(response.data)
-                // var tmpTirads = [];
-                // var secondTmpTirads = []
-                // secondTmpTirads.push(parseFloat(response.data.info.details.nodule_1), parseFloat(response.data.info.details.nodule_2), parseFloat(response.data.info.details.nodule_3), parseFloat(response.data.info.details.nodule_4), parseFloat(response.data.info.details.nodule_5))
-                // secondTmpTirads.sort(function (a, b) {
-                //     return a - b;
-                // })
-                // const indexes = {1: true, 2: true, 3: true, 4: true, 5: true}
-                // secondTmpTirads.reverse()
-                // for (let a of secondTmpTirads) {
-                //     if ((a === parseFloat(response.data.info.details.nodule_1)) && indexes[1]) {
-                //         tmpTirads.push(a + '% - EU-TIRADS 1')
-                //         indexes[1] = false
-                //     } else if ((a === parseFloat(response.data.info.details.nodule_2)) && indexes[2]) {
-                //         tmpTirads.push(a + '% - EU-TIRADS 2')
-                //         indexes[2] = false
-                //     } else if ((a === parseFloat(response.data.info.details.nodule_3)) && indexes[3]) {
-                //         tmpTirads.push(a + '% - EU-TIRADS 3')
-                //         indexes[3] = false
-                //     } else if ((a === parseFloat(response.data.info.details.nodule_4)) && indexes[4]) {
-                //         tmpTirads.push(a + '% - EU-TIRADS 4')
-                //         indexes[4] = false
-                //     } else if ((a === parseFloat(response.data.info.details.nodule_5)) && indexes[5]) {
-                //         tmpTirads.push(a + '% - EU-TIRADS 5')
-                //         indexes[5] = false
-                //     }
-                // }
                 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
                 axios.get(this.props.url + "/uzi/devices/?format=json")
                     .then((res) => {
@@ -671,11 +645,6 @@ class ResultsPage extends React.Component {
             additional_data: event.target.value
         })
     }
-    handleExpand = () => {
-        this.setState({
-            expanded_info: !this.state.expanded_info
-        })
-    }
     handleResult = (event) => {
         this.setState({
             result: event.target.value
@@ -740,6 +709,23 @@ class ResultsPage extends React.Component {
         this.setState({
             open: true
         })
+    };
+
+    // Новый метод для получения цветов для каждого узла
+    getNoduleColor = (index) => {
+        const colors = [
+            '#4fb3ea', // синий
+            '#00d995', // зеленый
+            '#d9007b', // розовый
+            '#ff9800', // оранжевый
+            '#9c27b0', // фиолетовый
+            '#f44336', // красный
+            '#4caf50', // зеленый
+            '#2196f3', // голубой
+            '#ffeb3b', // желтый
+            '#795548'  // коричневый
+        ];
+        return colors[index % colors.length];
     };
 
     render() {
@@ -885,7 +871,7 @@ class ResultsPage extends React.Component {
                             </Stack>
                             <Box className={'fourth-step'}>
                                 <Stack direction={'column'}>
-                                    <Button onClick={this.handleExpand} sx={{color: this.state.expanded_info? 'dimgray':'#4fb3ea', textTransform: 'none'}}>
+                                    <Button sx={{color: '#4fb3ea', textTransform: 'none'}} disabled={true}>
                                         <h3 style={{
                                             color: 'dimgray',
                                             fontSize: 15,
@@ -895,81 +881,42 @@ class ResultsPage extends React.Component {
                                             marginBlockStart: 4.5,
                                             marginInlineEnd: 5,
                                         }}>Типы новообразований, определенные ассистентом: </h3>
-                                        {!this.state.expanded_info?<KeyboardArrowDownIcon/>:<KeyboardArrowUpIcon/>}
                                     </Button>
-                                    <Stack direction="row" alignContent={'center'} justifyContent={'center'} spacing={1} sx={{paddingTop: 1}}>
-                                        {/*<Chip label="TI-RADS 1" clickable={true} sx={{color: this.state.tiradsType[0]? '#ffffff' : '#4fb3ea', borderColor: '#4fb3ea', backgroundColor: !this.state.tiradsType[0]? '#ffffff' : '#4fb3ea'}} variant={this.state.tiradsType[0]? "standard" : "outlined"} onClick={this.handleClick1}/>*/}
-                                        {/*<Chip label="TI-RADS 2" clickable={true} sx={{color: this.state.tiradsType[1]? '#ffffff' : '#4fb3ea', borderColor: '#4fb3ea', backgroundColor: !this.state.tiradsType[1]? '#ffffff' : '#4fb3ea'}} variant={this.state.tiradsType[1]? "filled" : "outlined"} onClick={this.handleClick2}/>*/}
-                                        {/*<Chip label="TI-RADS 3" clickable={true} sx={{color: this.state.tiradsType[2]? '#ffffff' : '#4fb3ea', borderColor: '#4fb3ea', backgroundColor: !this.state.tiradsType[2]? '#ffffff' : '#4fb3ea'}} variant={this.state.tiradsType[2]? "filled" : "outlined"} onClick={this.handleClick3}/>*/}
-                                        {/*<Chip label="TI-RADS 4" clickable={true} sx={{color: this.state.tiradsType[3]? '#ffffff' : '#4fb3ea', borderColor: '#4fb3ea', backgroundColor: !this.state.tiradsType[3]? '#ffffff' : '#4fb3ea'}} variant={this.state.tiradsType[3]? "filled" : "outlined"} onClick={this.handleClick4}/>*/}
-                                        {/*<Chip label="TI-RADS 5" clickable={true} sx={{color: this.state.tiradsType[4]? '#ffffff' : '#4fb3ea', borderColor: '#4fb3ea', backgroundColor: !this.state.tiradsType[4]? '#ffffff' : '#4fb3ea'}} variant={this.state.tiradsType[4]? "filled" : "outlined"} onClick={this.handleClick5}/>*/}
-                                        <Chip label="TI-RADS 1" sx={{color: !this.state.tiradsType[0]? '#949494' : '#4fb3ea', borderColor: !this.state.tiradsType[0]? '#949494' : '#4fb3ea', }} variant={ "outlined"} />
-                                        <Chip label="TI-RADS 2" sx={{color: !this.state.tiradsType[1]? '#949494' : '#4fb3ea', borderColor: !this.state.tiradsType[1]? '#949494' : '#4fb3ea', }} variant={"outlined"} />
-                                        <Chip label="TI-RADS 3" sx={{color: !this.state.tiradsType[2]? '#949494' : '#4fb3ea', borderColor: !this.state.tiradsType[2]? '#949494' : '#4fb3ea', }} variant={"outlined"} />
-                                        <Chip label="TI-RADS 4" sx={{color: !this.state.tiradsType[3]? '#949494' : '#4fb3ea', borderColor: !this.state.tiradsType[3]? '#949494' : '#4fb3ea', }} variant={"outlined"} />
-                                        <Chip label="TI-RADS 5" sx={{color: !this.state.tiradsType[4]? '#949494' : '#4fb3ea', borderColor: !this.state.tiradsType[4]? '#949494' : '#4fb3ea', }} variant={"outlined"} />
+
+                                    {/* Новое отображение: отдельная строка для каждого узла */}
+                                    <Stack direction="column" spacing={1} sx={{paddingTop: 1}}>
+                                        {Array.from(this.state.aiTypes).map((data, index) => (
+                                            <Stack key={index} direction="row" alignItems="center" spacing={1}>
+                                                <Chip
+                                                    label={`Узел ${index + 1}`}
+                                                    sx={{
+                                                        backgroundColor: this.getNoduleColor(index),
+                                                        color: 'white',
+                                                        fontWeight: 'bold',
+                                                        minWidth: 80
+                                                    }}
+                                                />
+                                                <Chip
+                                                    label={`TI-RADS ${data.details.nodule_type}`}
+                                                    sx={{
+                                                        color: '#4fb3ea',
+                                                        borderColor: '#4fb3ea',
+                                                        fontWeight: 'bold'
+                                                    }}
+                                                    variant="outlined"
+                                                />
+                                                <Typography variant="body2" sx={{ color: 'dimgray', ml: 1 }}>
+                                                    (TI-RADS 2-3: {(data.details.nodule_2_3*100).toFixed(1)}%,
+                                                    TI-RADS 4: {(data.details.nodule_4*100).toFixed(1)}%,
+                                                    TI-RADS 5: {(data.details.nodule_5*100).toFixed(1)}%)
+                                                </Typography>
+                                            </Stack>
+                                        ))}
                                     </Stack>
                                 </Stack>
-                                {this.state.expanded_info &&
-                                    <Stack className={'fifth-step'} alignContent={'center'} justifyContent={'center'} spacing={1} sx={{paddingTop: 2}}>
-                                        {Array.from(this.state.aiTypes).map((data, index) =>
-                                            <Stack direction={'row'} alignContent={'center'} justifyContent={'center'} spacing={2}>
-                                                <h3 style={{
-                                                    color: 'dimgray',
-                                                    fontSize: 15,
-                                                    fontFamily: "Roboto",
-                                                    fontWeight: 'bold',
-                                                    whiteSpace: 'normal',
-                                                    marginBlockStart: 4.5,
-                                                    marginInlineEnd: 5,
-                                                }}> Узел {index+1}:
-                                                </h3>
-                                                {/*<h3 style={{*/}
-                                                {/*    color: 'dimgray',*/}
-                                                {/*    fontSize: 15,*/}
-                                                {/*    fontFamily: "Roboto",*/}
-                                                {/*    fontWeight: 'normal',*/}
-                                                {/*    whiteSpace: 'normal',*/}
-                                                {/*    marginBlockStart: 4.5,*/}
-                                                {/*    marginInlineEnd: 5,*/}
-                                                {/*}}> TI-RADS {data.details.nodule_type.toString()}*/}
-                                                {/*</h3>*/}
-                                                <h3 style={{
-                                                    color: data.details.nodule_type === 2 || data.details.nodule_type === 3? '#008dc0':'dimgray',
-                                                    fontSize: 15,
-                                                    fontFamily: "Roboto",
-                                                    fontWeight: data.details.nodule_type === 2 || data.details.nodule_type === 3? 'normal':'lighter',
-                                                    whiteSpace: 'normal',
-                                                    marginBlockStart: 4.5,
-                                                    marginInlineEnd: 5,
-                                                }}> TI-RADS 2-3: {(data.details.nodule_2_3*100).toFixed(1).toString()} %
-                                                </h3>
-                                                <h3 style={{
-                                                    color: data.details.nodule_type === 4? '#008dc0':'dimgray',
-                                                    fontSize: 15,
-                                                    fontFamily: "Roboto",
-                                                    fontWeight: data.details.nodule_type === 4? 'normal':'lighter',
-                                                    whiteSpace: 'normal',
-                                                    marginBlockStart: 4.5,
-                                                    marginInlineEnd: 5,
-                                                }}> <b style={{fontWeight: "normal"}}>TI-RADS 4:</b> {(data.details.nodule_4*100).toFixed(1).toString()} %
-                                                </h3>
-                                                <h3 style={{
-                                                    color: data.details.nodule_type === 5? '#008dc0':'dimgray',
-                                                    fontSize: 15,
-                                                    fontFamily: "Roboto",
-                                                    fontWeight: data.details.nodule_type === 5?'normal' :'lighter',
-                                                    whiteSpace: 'normal',
-                                                    marginBlockStart: 4.5,
-                                                    marginInlineEnd: 5,
-                                                }}> <b style={{fontWeight: "normal"}}>TI-RADS 5:</b> {(data.details.nodule_5*100).toFixed(1).toString()} %
-                                                </h3>
-                                            </Stack>
-                                        )
-                                        }
-                                    </Stack>}
+
                                 <Stack direction={'column'}>
-                                    <Button onClick={this.handleExpand} sx={{ textTransform: 'none'}} disabled={true}>
+                                    <Button sx={{ textTransform: 'none'}} disabled={true}>
                                         <h3 style={{
                                             color: 'dimgray',
                                             fontSize: 15,
@@ -980,12 +927,35 @@ class ResultsPage extends React.Component {
                                             marginInlineEnd: 5,
                                         }}>Типы новообразований, определенные специалистом: </h3>
                                     </Button>
-                                    <Stack direction="row" alignContent={'center'} justifyContent={'center'} spacing={1} sx={{paddingTop: 1}}>
-                                        <Chip label="TI-RADS 1" sx={{color: this.state.doctorTiradsType[0]? '#ffffff' : '#194964', borderColor: '#1c4962', backgroundColor: !this.state.doctorTiradsType[0]? '#ffffff' : '#194964'}} variant={this.state.doctorTiradsType[0]? "standard" : "outlined"} />
-                                        <Chip label="TI-RADS 2" sx={{color: this.state.doctorTiradsType[1]? '#ffffff' : '#1e4960', borderColor: '#1f495f', backgroundColor: !this.state.doctorTiradsType[1]? '#ffffff' : '#194964'}} variant={this.state.doctorTiradsType[1]? "filled" : "outlined"} />
-                                        <Chip label="TI-RADS 3" sx={{color: this.state.doctorTiradsType[2]? '#ffffff' : '#1f495f', borderColor: '#21495e', backgroundColor: !this.state.doctorTiradsType[2]? '#ffffff' : '#194964'}} variant={this.state.doctorTiradsType[2]? "filled" : "outlined"} />
-                                        <Chip label="TI-RADS 4" sx={{color: this.state.doctorTiradsType[3]? '#ffffff' : '#22495d', borderColor: '#21495e', backgroundColor: !this.state.doctorTiradsType[3]? '#ffffff' : '#194964'}} variant={this.state.doctorTiradsType[3]? "filled" : "outlined"} />
-                                        <Chip label="TI-RADS 5" sx={{color: this.state.doctorTiradsType[4]? '#ffffff' : '#1c4962', borderColor: '#21495e', backgroundColor: !this.state.doctorTiradsType[4]? '#ffffff' : '#194964'}} variant={this.state.doctorTiradsType[4]? "filled" : "outlined"} />
+
+                                    {/* Новое отображение для узлов врача */}
+                                    <Stack direction="column" spacing={1} sx={{paddingTop: 1}}>
+                                        {Array.from(this.state.doctorTypes).map((data, index) => (
+                                            <Stack key={index} direction="row" alignItems="center" spacing={1}>
+                                                <Chip
+                                                    label={`Узел ${index + 1}`}
+                                                    sx={{
+                                                        backgroundColor: this.getNoduleColor(index),
+                                                        color: 'white',
+                                                        fontWeight: 'bold',
+                                                        minWidth: 80
+                                                    }}
+                                                />
+                                                <Chip
+                                                    label={`TI-RADS ${data.details.nodule_type}`}
+                                                    sx={{
+                                                        borderColor: '#194964',
+                                                        backgroundColor: '#194964',
+                                                        color: 'white',
+                                                        fontWeight: 'bold'
+                                                    }}
+                                                    variant="filled"
+                                                />
+                                                <Typography variant="body2" sx={{ color: 'dimgray', ml: 1, fontStyle: 'italic' }}>
+                                                    (подтверждено специалистом)
+                                                </Typography>
+                                            </Stack>
+                                        ))}
                                     </Stack>
                                 </Stack>
                             </Box>
@@ -993,7 +963,6 @@ class ResultsPage extends React.Component {
                         <Grid component={""} item alignItems={'center'} justifyContent={'center'} sx={{paddingTop: 0}}>
                             <Gallery url={this.props.url} props={this.props.props} link1={this.state.originalImage} date={this.state.uziDate} image_count={this.state.image_count} slide_template={this.state.slide_template}
                                      number={this.props.props} type={this.state.tiradsType} seg={this.state.segmentation} imageid={this.state.imageId}></Gallery>
-                            {/*<TabsComponent></TabsComponent>*/}
                         </Grid>
                         <Box className={'seventh-step'} component={""} sx={{display: 'flex', flexDirection: 'row', paddingTop: 2}}>
                             <Box component={""} sx={{flexDirection: 'column', paddingTop: 2, paddingLeft: 2}}>
@@ -1016,63 +985,6 @@ class ResultsPage extends React.Component {
                                         </TextFieldResult>
                                     </FormControl>
                                 </Box>
-
-                                {/*<Box flexDirection={'row'} justifySelf={'center'} justifyItems={'center'} alignItems={'center'} component={""} sx={{width: 300, borderRadius: 3, paddingTop: 2, flexDirection: 'row', display: 'flex'}}>*/}
-                                {/*    /!*<FormControl variant={'outlined'} fullWidth>*!/*/}
-                                {/*    <h3 style={{*/}
-                                {/*        color: 'dimgray',*/}
-                                {/*        fontSize: 15,*/}
-                                {/*        fontFamily: "Roboto",*/}
-                                {/*        fontWeight: 'normal',*/}
-                                {/*        whiteSpace: 'normal',*/}
-                                {/*        marginBlockStart: 0,*/}
-                                {/*        marginBlockEnd: 0,*/}
-                                {/*        marginInlineEnd: 0,*/}
-                                {/*    }}>Количество узлов:</h3>*/}
-                                {/*    <IconButton*/}
-                                {/*        aria-label="remove"*/}
-                                {/*        onClick={this.handleNoduleAmount2}*/}
-                                {/*        sx={{*/}
-                                {/*            color: (theme) => theme.palette.grey[500],*/}
-                                {/*        }}*/}
-                                {/*    >*/}
-                                {/*        <RemoveCircleOutlineIcon/>*/}
-                                {/*    </IconButton>*/}
-                                {/*    <h3 style={{*/}
-                                {/*        color: 'dimgray',*/}
-                                {/*        fontSize: 15,*/}
-                                {/*        fontFamily: "Roboto",*/}
-                                {/*        fontWeight: 'normal',*/}
-                                {/*        whiteSpace: 'normal',*/}
-                                {/*        marginBlockStart: 0,*/}
-                                {/*        marginBlockEnd: 0,*/}
-                                {/*        marginInlineEnd: 0,*/}
-                                {/*    }}>{this.state.nodule_amount}</h3>*/}
-                                {/*    <IconButton*/}
-                                {/*        aria-label="add"*/}
-                                {/*        onClick={this.handleNoduleAmount}*/}
-                                {/*        sx={{*/}
-                                {/*            color: (theme) => theme.palette.grey[500],*/}
-                                {/*        }}*/}
-                                {/*    >*/}
-                                {/*        <AddCircleOutlineIcon/>*/}
-                                {/*    </IconButton>*/}
-                                {/*</Box>*/}
-                                {/*<Box component={""} sx={{width: 300, borderRadius: 3}}>*/}
-                                {/*    <FormControl variant={'outlined'} fullWidth>*/}
-                                {/*        <LocalizationProvider adapterLocale={'ru'} dateAdapter={AdapterDayjs}>*/}
-                                {/*            <DatePicker*/}
-                                {/*                label="Дата приема"*/}
-                                {/*                value={this.state.uziDate}*/}
-                                {/*                onChange={(newValue) => {*/}
-                                {/*                    this.setState({uziDate: newValue});*/}
-                                {/*                }}*/}
-                                {/*                renderInput={(params) => <TextFieldResult {...params}*/}
-                                {/*                                                          InputLabelProps={{shrink: true}}/>}*/}
-                                {/*            />*/}
-                                {/*        </LocalizationProvider>*/}
-                                {/*    </FormControl>*/}
-                                {/*</Box>*/}
                             </Box>
                             <Box component={""} sx={{flexDirection: 'column', paddingTop: 2, paddingLeft: 2}}>
                                 <Box component={""} sx={{width: 300, borderRadius: 3, paddingBottom: 2}}>
@@ -1091,26 +1003,6 @@ class ResultsPage extends React.Component {
                                         </TextFieldResult>
                                     </FormControl>
                                 </Box>
-                                {/*<Chip></Chip>*/}
-                                {/*<Box component={""} sx={{width: 300, borderRadius: 3}}>*/}
-                                {/*    <FormControl variant={'outlined'} fullWidth>*/}
-                                {/*        <TextFieldResult*/}
-                                {/*            value={this.state.tiradsType}*/}
-                                {/*            label="Тип узла по EU TI-RADS"*/}
-                                {/*            onChange={this.handleChooseTirads}*/}
-                                {/*            variant='outlined'*/}
-                                {/*            defaultValue={1}*/}
-                                {/*            select*/}
-                                {/*            InputLabelProps={{shrink: true}}*/}
-                                {/*        >*/}
-                                {/*            <MenuItem value={'1'}>1</MenuItem>*/}
-                                {/*            <MenuItem value={'2'}>2</MenuItem>*/}
-                                {/*            <MenuItem value={'3'}>3</MenuItem>*/}
-                                {/*            <MenuItem value={'4'}>4</MenuItem>*/}
-                                {/*            <MenuItem value={'5'}>5</MenuItem>*/}
-                                {/*        </TextFieldResult>*/}
-                                {/*    </FormControl>*/}
-                                {/*</Box>*/}
                             </Box>
                             <Box component={""} sx={{flexDirection: 'column', paddingTop: 1, paddingLeft: 2}}>
                                 <FormGroup>
@@ -1491,17 +1383,6 @@ class ResultsPage extends React.Component {
                                             width: 300, borderRadius: 3, display: 'flex', justifyContent: 'center',
                                             alignContent: 'center'
                                         }}>
-                                            {/*<Button component={Link} to={`mask/`}*/}
-                                            {/*        disabled={(this.state.originalImage.split('.')[1] === 'tiff' || this.state.originalImage.split('.')[1] === 'tif')}*/}
-                                            {/*        sx={{*/}
-                                            {/*            width: '100%',*/}
-                                            {/*            color: '#3083a9',*/}
-                                            {/*            '&:focus': {backgroundColor: '#3083a9'},*/}
-                                            {/*            '&:hover': {},*/}
-                                            {/*            fontFamily: 'Roboto'*/}
-                                            {/*        }} variant={'outlined'}>*/}
-                                            {/*    Указать ошибку*/}
-                                            {/*</Button>*/}
                                         </Box>
 
                                     </Box>
@@ -1511,74 +1392,6 @@ class ResultsPage extends React.Component {
                             </Box>
 
                         </Box>
-                        {/*<Stack direction="column">*/}
-                        {/*    {this.state.predictedTypes.map((item, index) =>*/}
-                        {/*        <Stack direction={'row'} sx={{paddingTop: 1}}>*/}
-                        {/*            <h3 style={{*/}
-                        {/*                color: 'dimgray',*/}
-                        {/*                fontSize: 20,*/}
-                        {/*                fontFamily: "Roboto",*/}
-                        {/*                fontWeight: 'normal',*/}
-                        {/*                whiteSpace: 'normal',*/}
-                        {/*                marginBlockStart: 0,*/}
-                        {/*                marginBlockEnd: 0,*/}
-                        {/*                marginInlineEnd: 5,*/}
-                        {/*            }}>{index+1}</h3>*/}
-                        {/*            <Box component={""} sx={{width: 300, borderRadius: 3, paddingBottom: 2, paddingInline: 1}}>*/}
-                        {/*                <FormControl variant={'outlined'} fullWidth>*/}
-                        {/*            <TextFieldResult*/}
-                        {/*                InputLabelProps={{shrink: true}}*/}
-                        {/*                value={this.state.predictedTypes[index].nodule_type}*/}
-                        {/*                label="Тип EU TI-RADS"*/}
-                        {/*                onChange={this.handleChooseProjection}*/}
-                        {/*                variant='outlined'*/}
-                        {/*                select*/}
-                        {/*            >*/}
-                        {/*                <MenuItem value={2}>2</MenuItem>*/}
-                        {/*                <MenuItem value={3}>3</MenuItem>*/}
-                        {/*                <MenuItem value={4}>4</MenuItem>*/}
-                        {/*                <MenuItem value={5}>5</MenuItem>*/}
-                        {/*            </TextFieldResult>*/}
-                        {/*                </FormControl>*/}
-                        {/*            </Box>*/}
-                        {/*            <Box component={""} sx={{width: 200, borderRadius: 3, paddingBottom: 2, paddingInline: 1}}>*/}
-                        {/*                <FormControl variant={'outlined'} fullWidth>*/}
-                        {/*                    <TextFieldResult*/}
-                        {/*                        InputLabelProps={{shrink: true}}*/}
-                        {/*                        value={this.state.predictedTypes[index].nodule_width}*/}
-                        {/*                        label="Ширина узла"*/}
-                        {/*                        onChange={this.handleChooseProjection}*/}
-                        {/*                        variant='outlined'*/}
-                        {/*                    >*/}
-                        {/*                    </TextFieldResult>*/}
-                        {/*                </FormControl>*/}
-                        {/*            </Box>*/}
-                        {/*            <Box component={""} sx={{width: 200, borderRadius: 3, paddingBottom: 2, paddingInline: 1}}>*/}
-                        {/*                <FormControl variant={'outlined'} fullWidth>*/}
-                        {/*                    <TextFieldResult*/}
-                        {/*                        InputLabelProps={{shrink: true}}*/}
-                        {/*                        value={this.state.predictedTypes[index].nodule_length}*/}
-                        {/*                        label="Длина узла"*/}
-                        {/*                        onChange={this.handleChooseProjection}*/}
-                        {/*                        variant='outlined'*/}
-                        {/*                    >*/}
-                        {/*                    </TextFieldResult>*/}
-                        {/*                </FormControl>*/}
-                        {/*            </Box>*/}
-                        {/*            <Box component={""} sx={{width: 200, borderRadius: 3, paddingBottom: 2, paddingInline: 1}}>*/}
-                        {/*                <FormControl variant={'outlined'} fullWidth>*/}
-                        {/*                    <TextFieldResult*/}
-                        {/*                        InputLabelProps={{shrink: true}}*/}
-                        {/*                        value={this.state.predictedTypes[index].nodule_height}*/}
-                        {/*                        label="Толщина узла"*/}
-                        {/*                        onChange={this.handleChooseProjection}*/}
-                        {/*                        variant='outlined'*/}
-                        {/*                    >*/}
-                        {/*                    </TextFieldResult>*/}
-                        {/*                </FormControl>*/}
-                        {/*            </Box>*/}
-                        {/*        </Stack>) }*/}
-                        {/*</Stack>*/}
                     </Grid>
                 </Box>
 
