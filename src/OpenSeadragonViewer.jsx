@@ -17,11 +17,15 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
     const [closed, setClosed] = useState(true);
     const [tiffanno, setTiffAnno] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [zoomLevel, setZoomLevel] = useState(1);
+    const [showSegments, setShowSegments] = useState(true);
+    const [totalPages, setTotalPages] = useState(0);
 
     const viewerRef = useRef(null);
     const annoRef = useRef(null);
 
     console.log('Image:', image);
+    console.log('Image length:', image?.length);
     console.log('Seg:', seg);
 
     const initOpenseadragon = () => {
@@ -42,6 +46,18 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
 
         viewerRef.current = viewer_tmp;
         setViewer(viewer_tmp);
+
+        // Используем длину массива image как количество страниц
+        if (image && Array.isArray(image)) {
+            console.log('Setting total pages from image array:', image.length);
+            setTotalPages(image.length);
+        }
+
+        // Добавляем обработчик изменения зума
+        viewer_tmp.addHandler('zoom', function(event) {
+            setZoomLevel(event.zoom);
+        });
+
         return viewer_tmp;
     };
 
@@ -69,17 +85,79 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         return annotateState;
     };
 
+    // Функции управления OpenSeaDragon
+    const zoomIn = () => {
+        if (viewerRef.current) {
+            viewerRef.current.viewport.zoomBy(1.5);
+        }
+    };
+
+    const zoomOut = () => {
+        if (viewerRef.current) {
+            viewerRef.current.viewport.zoomBy(0.5);
+        }
+    };
+
+    const fitToScreen = () => {
+        if (viewerRef.current) {
+            viewerRef.current.viewport.fitBounds(viewerRef.current.viewport.getHomeBounds());
+        }
+    };
+
+    const goHome = () => {
+        if (viewerRef.current) {
+            viewerRef.current.viewport.goHome();
+        }
+    };
+
+    const nextPage = () => {
+        if (viewerRef.current && totalPages > 1) {
+            const current = viewerRef.current.currentPage();
+            const next = (current + 1) % totalPages;
+            viewerRef.current.goToPage(next);
+        }
+    };
+
+    const prevPage = () => {
+        if (viewerRef.current && totalPages > 1) {
+            const current = viewerRef.current.currentPage();
+            const prev = (current - 1 + totalPages) % totalPages;
+            viewerRef.current.goToPage(prev);
+        }
+    };
+
+    const rotateLeft = () => {
+        if (viewerRef.current) {
+            const currentRotation = viewerRef.current.viewport.getRotation();
+            viewerRef.current.viewport.setRotation(currentRotation - 90);
+        }
+    };
+
+    const rotateRight = () => {
+        if (viewerRef.current) {
+            const currentRotation = viewerRef.current.viewport.getRotation();
+            viewerRef.current.viewport.setRotation(currentRotation + 90);
+        }
+    };
+
+    // Функция для переключения отображения сегментов
+    const toggleSegments = () => {
+        setShowSegments(prev => !prev);
+    };
+
     // Функция для обновления аннотаций на текущей странице
     const updateAnnotationsForPage = (pageIndex) => {
         if (!annoRef.current || !tiffanno.length) {
             return;
         }
 
-        console.log(`Updating annotations for page ${pageIndex}`);
+        console.log(`Updating annotations for page ${pageIndex}, showSegments: ${showSegments}`);
 
+        // Всегда очищаем аннотации
         annoRef.current.clearAnnotations();
 
-        if (tiffanno[pageIndex] && tiffanno[pageIndex].length > 0) {
+        // Добавляем аннотации только если showSegments = true
+        if (showSegments && tiffanno[pageIndex] && tiffanno[pageIndex].length > 0) {
             tiffanno[pageIndex].forEach(annotation => {
                 try {
                     annoRef.current.addAnnotation(annotation);
@@ -98,7 +176,7 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         updateAnnotationsForPage(newPage);
     };
 
-// Подготовка аннотаций для всех страниц
+    // Подготовка аннотаций для всех страниц
     const prepareAnnotations = () => {
         console.log('Preparing annotations for all pages...');
 
@@ -213,6 +291,13 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         }
         return 0;
     };
+
+    // Эффект для обновления отображения сегментов при изменении showSegments
+    useEffect(() => {
+        if (annoRef.current && viewerRef.current) {
+            updateAnnotationsForPage(currentPage);
+        }
+    }, [showSegments]);
 
     useEffect(() => {
         if (annoRef.current) {
@@ -330,7 +415,6 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
     }
 
     useEffect(() => {
-        //console.log(image)
         if (image !== null){
             const viewer_tmp = initOpenseadragon()
             initializeAnnotations(viewer_tmp)
@@ -349,7 +433,6 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
                 viewer.addHandler('page', handleAnnotations)
             }
         })
-        //console.log(anno.getAnnotations())
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -360,11 +443,11 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
             anno.addAnnotation(tmp)
         }
     }
+
     useEffect(() => {
         if(anno) {
             anno.on('createAnnotation', async function (annotation, overrideId) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
-                //console.log(annotation)
                 const data = Object()
                 data.points = []
                 for (let item of annotation.body) {
@@ -383,7 +466,6 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
 
                 if (tool === 'polygon') {
                     let cur = toGeoJSON(annotation.target.selector.value.split('"')[1])
-                    //console.log(cur)
                     for (let item of cur[0]) {
                         data.points.push({x: parseInt(item[0]), y: parseInt(item[1]), z: viewer.currentPage()})
                     }
@@ -406,15 +488,10 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
                         y: parseInt(cur[1]) + parseInt(cur[3]),
                         z: viewer.currentPage()
                     })
-                    //console.log(data.points)
                 }
-                //console.log(data)
-                //console.log(url + '/uzi/segment/' + imageId)
                 await axios.post(url + '/uzi/segment/' + imageid + '/', data).then((response) => {
-                    // console.log(response)
                     overrideId(response.data.id)
                 }).catch((response) => {
-                    // console.log(response)
                 })
             });
             anno.on('updateAnnotation', async function (annotation, previous) {
@@ -425,35 +502,22 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
                         details.nodule_type = parseInt(item.value.split(' ')[1])
                     }
                 }
-
-                // if (tool === 'polygon') {
-                //     let cur = toGeoJSON(annotation.target.selector.value.split('"')[1])
-                //     console.log(cur)
-                //     for (let item of cur[0]) {
-                //         data.points.push({x: parseInt(item[0]), y: parseInt(item[1]), z: viewer.currentPage()})
-                //     }
-                // }
                 axios.patch(url + '/uzi/segment/' + imageid + '/' + annotation.id).then((response) => {
-                        //console.log(response.data)
                         let tmp = Object()
                         tmp.details = response.data.details
                         tmp.details.nodule_type = details.nodule_type
                         axios.put(url + '/uzi/segment/' + imageid + '/' + annotation.id, tmp).then((response) => {
-                            // console.log(response.data)
                         })
                     }
                 );
             });
             anno.on('deleteAnnotation', async function (annotation) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
-                //console.log(url + '/uzi/segment/' + imageId + '/' + annotation.id)
                 await axios.delete(url + '/uzi/segment/' + imageid + '/' + annotation.id).then((response) => {
-                    // console.log(response.data)
                 })
             });
         }
     }, [anno])
-
 
     useEffect(() => {
         if (viewer){
@@ -462,11 +526,240 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
     }, [viewer])
 
     return (
-        <div>
-            <div id="openseadragon">
+        <div style={{position: 'relative', width: '100%', height: '100%'}}>
+            {/* Панель управления справа */}
+            <div style={{
+                position: 'absolute',
+                top: '50%',
+                right: '10px',
+                transform: 'translateY(-50%)',
+                zIndex: 1000,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                padding: '12px 8px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                border: '1px solid rgba(0,0,0,0.1)',
+                overflowY: 'auto',
+                minWidth: '120px',
+                minHeight: '400px'
+            }}>
+                {/* Управление зумом */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    alignItems: 'center'
+                }}>
+                    <button
+                        onClick={zoomIn}
+                        style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            backgroundColor: '#2196F3',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                            minWidth: '44px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#1976D2'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#2196F3'}
+                    >+
+                    </button>
+
+                    <div style={{
+                        fontSize: '15px',
+                        color: '#666',
+                        textAlign: 'center',
+                        margin: '2px 0'
+                    }}>
+                        {Math.round(zoomLevel * 100)}%
+                    </div>
+
+                    <button
+                        onClick={zoomOut}
+                        style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            backgroundColor: '#2196F3',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                            minWidth: '44px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#1976D2'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#2196F3'}
+                    >-
+                    </button>
+                </div>
+
+                {/* Разделитель */}
+                <div style={{
+                    height: '1px',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    margin: '4px 0'
+                }}></div>
+
+                {/* Кнопка Fit */}
+                <button
+                    onClick={fitToScreen}
+                    style={{
+                        padding: '8px 6px',
+                        cursor: 'pointer',
+                        backgroundColor: '#FF9800',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '15px',
+                        fontWeight: 'bold',
+                        minWidth: '44px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#F57C00'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = '#FF9800'}
+                >
+                    Fit
+                </button>
+
+                {/* Разделитель */}
+                <div style={{
+                    height: '1px',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    margin: '4px 0'
+                }}></div>
+
+                {/* Управление поворотом */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    alignItems: 'center'
+                }}>
+                    <button
+                        onClick={rotateLeft}
+                        style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            backgroundColor: '#9C27B0',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                            minWidth: '44px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#7B1FA2'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#9C27B0'}
+                    >↶
+                    </button>
+
+                    <div style={{
+                        fontSize: '15px',
+                        color: '#666',
+                        textAlign: 'center'
+                    }}>
+                        Поворот
+                    </div>
+
+                    <button
+                        onClick={rotateRight}
+                        style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            backgroundColor: '#9C27B0',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                            minWidth: '44px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#7B1FA2'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#9C27B0'}
+                    >↷
+                    </button>
+                </div>
+
+                {/* Разделитель */}
+                <div style={{
+                    height: '1px',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    margin: '4px 0'
+                }}></div>
+
+                {/* Кнопка показа/скрытия сегментов */}
+                <div style={{display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center'}}>
+                    <button
+                        onClick={toggleSegments}
+                        style={{
+                            padding: '8px 6px',
+                            cursor: 'pointer',
+                            backgroundColor: showSegments ? '#4CAF50' : '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '15px',
+                            fontWeight: 'bold',
+                            minWidth: '100px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = showSegments ? '#388E3C' : '#D32F2F'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = showSegments ? '#4CAF50' : '#f44336'}
+                    >
+                        {showSegments ? 'Скрыть' : 'Показать'}
+                    </button>
+
+                    {/* Статус отображения сегментов */}
+                    <div style={{
+                        fontSize: '15px',
+                        textAlign: 'center',
+                        color: showSegments ? '#4CAF50' : '#f44336',
+                        fontWeight: 'bold'
+                    }}>
+                        {showSegments ? 'ВКЛ' : 'ВЫКЛ'}
+                    </div>
+                </div>
+            </div>
+
+            {/* Отображение номера слайда в левом нижнем углу */}
+            {totalPages > 1 && (
+                <div style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    left: '20px',
+                    zIndex: 1000,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    color: 'white',
+                    padding: '10px 16px',
+                    borderRadius: '10px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                    border: '2px solid rgba(255,255,255,0.3)'
+                }}>
+                    Слайд: {currentPage + 1} / {totalPages}
+                </div>
+            )}
+
+            <div id="openseadragon" style={{width: '100%', height: '100%'}}>
             </div>
         </div>
-
     );
 }
 

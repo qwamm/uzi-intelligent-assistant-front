@@ -289,7 +289,7 @@ function App(props) {
                                 spacing={2}
                                 alignItems="center"
                             >
-                                {['Пациенты', 'Почта', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
+                                {['Пациенты', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
                                     <Grid
                                         item
                                         key={text}
@@ -298,7 +298,7 @@ function App(props) {
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            flex: index === 2 ? '1 0 auto' : '0 1 auto'
+                                            flex: index === 1 ? '1 0 auto' : '0 1 auto'
                                         }}
                                     >
                                         <Button
@@ -306,7 +306,7 @@ function App(props) {
                                             component={Link}
                                             sx={{
                                                 height: 65,
-                                                minWidth: index === 2 ? 160 : 100,
+                                                minWidth: index === 1 ? 160 : 100,
                                                 paddingX: 2,
                                                 marginBlock: 0,
                                                 fontFamily: 'Roboto',
@@ -314,7 +314,7 @@ function App(props) {
                                                 borderRadius: 0,
                                                 borderBottomColor: "white",
                                                 borderBottomWidth: 0,
-                                                fontWeight: index === 2 ? 'normal' : 'lighter',
+                                                fontWeight: index === 1 ? 'normal' : 'lighter',
                                                 color: 'dimgray',
                                                 textTransform: 'none',
                                                 boxShadow: 0,
@@ -335,10 +335,10 @@ function App(props) {
                                                     backgroundColor: 'white'
                                                 },
                                             }}
-                                            to={index === 2 ? `home` : index === 0 ? `patients` : index === 1 ? `inbox` : index === 3 ? `faq` : `sign_in`}
+                                            to={index === 1 ? `home` : index === 0 ? `patients` : index === 2 ? `faq` : `sign_in`}
                                             onClick={index === 4 ? handleExit : null}
                                         >
-                                            {index === 4 && (
+                                            {index === 3 && (
                                                 <ExitToAppIcon
                                                     sx={{
                                                         fontSize: 20,
