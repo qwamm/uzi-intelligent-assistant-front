@@ -24,6 +24,20 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
     const viewerRef = useRef(null);
     const annoRef = useRef(null);
 
+    // Цвета для разных узлов
+    const NODE_COLORS = [
+        '#FF0000', // Красный
+        '#00FF00', // Зеленый
+        '#0000FF', // Синий
+        '#FFFF00', // Желтый
+        '#FF00FF', // Пурпурный
+        '#00FFFF', // Голубой
+        '#FFA500', // Оранжевый
+        '#800080', // Фиолетовый
+        '#008000', // Темно-зеленый
+        '#FF69B4'  // Розовый
+    ];
+
     console.log('Image:', image);
     console.log('Image length:', image?.length);
     console.log('Seg:', seg);
@@ -47,13 +61,11 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         viewerRef.current = viewer_tmp;
         setViewer(viewer_tmp);
 
-        // Используем длину массива image как количество страниц
         if (image && Array.isArray(image)) {
             console.log('Setting total pages from image array:', image.length);
             setTotalPages(image.length);
         }
 
-        // Добавляем обработчик изменения зума
         viewer_tmp.addHandler('zoom', function(event) {
             setZoomLevel(event.zoom);
         });
@@ -73,7 +85,7 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
                 { widget: 'TAG', vocabulary: [ 'TI-RADS 1', 'TI-RADS 2', 'TI-RADS 3', 'TI-RADS 4', 'TI-RADS 5', 'Doctor result', 'AI'] }
             ],
             tools: ['ellipse', 'freehand', 'point'],
-            formatter
+            formatter: formatter // Добавляем formatter в конфигурацию
         });
 
         annotateState.setDrawingTool('polygon');
@@ -140,136 +152,186 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         }
     };
 
-    // Функция для переключения отображения сегментов
     const toggleSegments = () => {
         setShowSegments(prev => !prev);
     };
 
-    // Функция для обновления аннотаций на текущей странице
     const updateAnnotationsForPage = (pageIndex) => {
-        if (!annoRef.current || !tiffanno.length) {
+        if (!annoRef.current || !tiffanno.length || !tiffanno[pageIndex]) {
             return;
         }
 
-        console.log(`Updating annotations for page ${pageIndex}, showSegments: ${showSegments}`);
-
-        // Всегда очищаем аннотации
         annoRef.current.clearAnnotations();
 
-        // Добавляем аннотации только если showSegments = true
-        if (showSegments && tiffanno[pageIndex] && tiffanno[pageIndex].length > 0) {
+        if (showSegments && tiffanno[pageIndex].length > 0) {
             tiffanno[pageIndex].forEach(annotation => {
                 try {
-                    annoRef.current.addAnnotation(annotation);
+                    // Проверяем аннотацию перед добавлением
+                    if (annotation && annotation.id) {
+                        annoRef.current.addAnnotation(annotation);
+                    }
                 } catch (error) {
                     console.error('Error adding annotation:', error);
                 }
             });
+
+            // Применяем стили с задержкой после добавления аннотаций
+            setTimeout(() => {
+                if (tiffanno[pageIndex] && tiffanno[pageIndex].length > 0) {
+                    tiffanno[pageIndex].forEach(annotation => {
+                        if (annotation && annotation.id) {
+                            applyColorToAnnotation(annotation);
+                        }
+                    });
+                }
+            }, 100);
         }
     };
 
-    // Обработчик смены страницы
     const handlePageChange = (data) => {
         const newPage = data.page;
-        console.log('Page changed to:', newPage);
         setCurrentPage(newPage);
+        console.log('ABCDEFGIHJKLMN')
         updateAnnotationsForPage(newPage);
     };
 
-    // Подготовка аннотаций для всех страниц
     const prepareAnnotations = () => {
-        console.log('Preparing annotations for all pages...');
+        const actualPages = image?.length || 0;
+        const annotations = Array.from({ length: actualPages }, () => []);
 
-        const annotations = Array.from({ length: image.length }, () => []);
+        console.log(`Preparing annotations for ${actualPages} pages`);
+        console.log('Segments data:', seg);
 
         if (seg && seg.length > 0) {
-            console.log(`Processing ${seg.length} segments`);
+            const nodeColorMap = new Map();
 
+            // Назначаем уникальные цвета каждому узлу
+            seg.forEach((segment, segmentIndex) => {
+                const colorIndex = segmentIndex % NODE_COLORS.length;
+                const nodeColor = NODE_COLORS[colorIndex];
+                nodeColorMap.set(segment.id, nodeColor);
+            });
+
+            console.log('Node color mapping:', Array.from(nodeColorMap.entries()));
+
+            // Для каждого узла
             seg.forEach((segment) => {
-                if (segment.data && segment.data.length > 0) {
-                    segment.data.forEach((contour) => {
-                        if (contour.points && contour.points.length > 0) {
+                if (!segment) return;
 
-                            // Группируем точки по координате z
+                const nodeColor = nodeColorMap.get(segment.id);
+                const nodeId = segment.id;
+
+                console.log(`Processing node ${nodeId} with ${segment.data?.length || 0} contours`);
+
+                if (segment.data && segment.data.length > 0) {
+                    // Для каждого контура узла
+                    segment.data.forEach((contour, contourIndex) => {
+                        if (!contour || !contour.points) return;
+
+                        console.log(`Node ${nodeId}, contour ${contourIndex}: ${contour.points?.length || 0} points`);
+
+                        if (contour.points && contour.points.length > 0) {
                             const pointsByPage = {};
 
+                            // Группируем точки контура по страницам
                             contour.points.forEach(point => {
                                 const pageIndex = point.z || 0;
-                                if (!pointsByPage[pageIndex]) {
-                                    pointsByPage[pageIndex] = [];
+
+                                if (pageIndex >= 0 && pageIndex < actualPages) {
+                                    if (!pointsByPage[pageIndex]) {
+                                        pointsByPage[pageIndex] = [];
+                                    }
+                                    pointsByPage[pageIndex].push(point);
                                 }
-                                pointsByPage[pageIndex].push(point);
                             });
 
-                            console.log('POINTS BY PAGE', pointsByPage);
-
-                            // Создаем отдельную аннотацию для каждой группы точек с одинаковым z
+                            // Создаем аннотацию для каждой страницы, где есть точки этого контура
                             Object.entries(pointsByPage).forEach(([pageIndexStr, points]) => {
                                 const pageIndex = parseInt(pageIndexStr);
 
-                                if (pageIndex >= annotations.length) {
-                                    console.warn(`Page index ${pageIndex} exceeds available pages ${annotations.length}`);
-                                    return;
-                                }
+                                if (points.length >= 3) { // Минимум 3 точки для полигона
+                                    try {
+                                        const coord = points.map(point => [point.x, point.y]);
+                                        const svgPoints = fromGeoJSON(coord).toString();
+                                        const svgSelector = `<svg><polygon points="${svgPoints}"></polygon></svg>`;
 
-                                try {
-                                    // Преобразуем точки в SVG формат
-                                    const coord = points.map(point => [point.x, point.y]);
-                                    const svgPoints = fromGeoJSON(coord).toString();
-                                    const svgSelector = `<svg><polygon points="${svgPoints}"></polygon></svg>`;
+                                        // Уникальный ID для каждой аннотации
+                                        const uniqueAnnotationId = `node_${nodeId}_contour_${contourIndex}_page_${pageIndex}`;
 
-                                    // Создаем аннотацию
-                                    const annotation = {
-                                        type: "Annotation",
-                                        body: [
-                                            {
-                                                type: "TextualBody",
-                                                value: `TI-RADS 2-3: ${Number((segment.details?.nodule_2_3 * 100) || 0).toFixed(1)}%\n\nTI-RADS 4: ${Number((segment.details?.nodule_4 * 100) || 0).toFixed(1)}%\n\nTI-RADS 5: ${Number((segment.details?.nodule_5 * 100) || 0).toFixed(1)}%`,
-                                                purpose: "commenting"
+                                        const annotation = {
+                                            type: "Annotation",
+                                            body: [
+                                                {
+                                                    type: "TextualBody",
+                                                    value: `Узел ${nodeId}\nTI-RADS 2-3: ${Number((segment.details?.nodule_2_3 * 100) || 0).toFixed(1)}%\nTI-RADS 4: ${Number((segment.details?.nodule_4 * 100) || 0).toFixed(1)}%\nTI-RADS 5: ${Number((segment.details?.nodule_5 * 100) || 0).toFixed(1)}%`,
+                                                    purpose: "commenting"
+                                                },
+                                                {
+                                                    type: "TextualBody",
+                                                    value: segment.is_ai ? "AI only" : "Updated",
+                                                    purpose: "commenting"
+                                                },
+                                                {
+                                                    type: "TextualBody",
+                                                    value: "TI-RADS " + (segment.details?.nodule_type || 'Unknown'),
+                                                    purpose: "tagging"
+                                                },
+                                                {
+                                                    type: "TextualBody",
+                                                    value: `Узел ${nodeId}`,
+                                                    purpose: "group"
+                                                },
+                                                {
+                                                    type: "TextualBody",
+                                                    value: segment.is_ai ? "AI" : "Doctor result",
+                                                    purpose: "tagging"
+                                                },
+                                                {
+                                                    type: "TextualBody",
+                                                    value: nodeColor,
+                                                    purpose: "color"
+                                                },
+                                                {
+                                                    type: "TextualBody",
+                                                    value: nodeId.toString(),
+                                                    purpose: "node-id"
+                                                }
+                                            ],
+                                            target: {
+                                                source: image[pageIndex]?.url || "http://localhost:5173/result/undefined",
+                                                selector: {
+                                                    type: "SvgSelector",
+                                                    value: svgSelector,
+                                                }
                                             },
-                                            {
-                                                type: "TextualBody",
-                                                value: segment.is_ai ? "AI only" : "Updated",
-                                                purpose: "commenting"
-                                            },
-                                            {
-                                                type: "TextualBody",
-                                                value: "TI-RADS " + (segment.details?.nodule_type || 'Unknown'),
-                                                purpose: "tagging"
-                                            },
-                                            {
-                                                type: "TextualBody",
-                                                value: segment.id.toString(),
-                                                purpose: "group"
-                                            },
-                                            {
-                                                type: "TextualBody",
-                                                value: segment.is_ai ? "AI" : "Doctor result",
-                                                purpose: "tagging"
-                                            },
-                                        ],
-                                        target: {
-                                            source: image[pageIndex]?.url || "http://localhost:3000/result/undefined",
-                                            selector: {
-                                                type: "SvgSelector",
-                                                value: svgSelector,
-                                            }
-                                        },
-                                        "@context": "http://www.w3.org/ns/anno.jsonld",
-                                        id: `${contour.id}_${pageIndex}` // Уникальный ID для каждой аннотации
-                                    };
+                                            "@context": "http://www.w3.org/ns/anno.jsonld",
+                                            id: uniqueAnnotationId
+                                        };
 
-                                    annotations[pageIndex].push(annotation);
-                                    console.log(`Added annotation to page ${pageIndex} with ${points.length} points`);
+                                        annotations[pageIndex].push(annotation);
+                                        console.log(`Added annotation for node ${nodeId}, contour ${contourIndex} on page ${pageIndex} with ${points.length} points`);
 
-                                } catch (error) {
-                                    console.error('Error creating annotation:', error);
+                                    } catch (error) {
+                                        console.error('Error creating annotation:', error);
+                                    }
                                 }
                             });
                         }
                     });
                 }
             });
+
+            // Подсчитываем реальное количество узлов на каждой странице
+            annotations.forEach((pageAnnotations, pageIndex) => {
+                const uniqueNodes = new Set();
+                pageAnnotations.forEach(ann => {
+                    const nodeIdBody = ann.body.find(b => b.purpose === 'node-id');
+                    if (nodeIdBody) uniqueNodes.add(nodeIdBody.value);
+                });
+                console.log(`Page ${pageIndex}: ${pageAnnotations.length} annotations from ${uniqueNodes.size} unique nodes`);
+            });
+        } else {
+            console.log('No segments data available');
         }
 
         console.log('Final annotations structure:',
@@ -279,7 +341,106 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         return annotations;
     };
 
-    // Функция для поиска страницы с аннотациями
+    // Упрощенная функция formatter - возвращаем только метку
+    const formatter = (annotation) => {
+        // Проверяем TI-RADS категории для метки
+        const isA = annotation.body.find(b => {
+            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 1'
+        });
+        const isB = annotation.body.find(b => {
+            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 2'
+        });
+        const isC = annotation.body.find(b => {
+            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 3'
+        });
+        const isD = annotation.body.find(b => {
+            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 4'
+        });
+        const isE = annotation.body.find(b => {
+            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 5'
+        });
+        const isDOC = annotation.body.find(b => {
+            return b.purpose === 'tagging' && b.value.toLowerCase() === 'doctor result'
+        });
+
+        // Определяем метку
+        let label = '';
+        if (isDOC) {
+            if (isA) label = 'DOC-A';
+            else if (isB) label = 'DOC-B';
+            else if (isC) label = 'DOC-C';
+            else if (isD) label = 'DOC-D';
+            else if (isE) label = 'DOC-E';
+            else label = 'DOC';
+        } else {
+            if (isA) label = 'A';
+            else if (isB) label = 'B';
+            else if (isC) label = 'C';
+            else if (isD) label = 'D';
+            else if (isE) label = 'E';
+        }
+
+        return label;
+    };
+
+    // Функция для применения стилей к аннотациям
+    const applyAnnotationStyles = () => {
+        if (!annoRef.current) return;
+
+        // Добавляем кастомные стили для аннотаций
+        const style = document.createElement('style');
+        style.textContent = `
+            .a9s-annotation .a9s-inner {
+                stroke-width: 2px;
+                stroke-opacity: 0.8;
+                fill-opacity: 0.3;
+            }
+
+            /* Динамические стили будут применены через JavaScript */
+        `;
+        document.head.appendChild(style);
+
+        // Применяем цвета к аннотациям после их загрузки
+        annoRef.current.on('createAnnotation', (annotation) => {
+            if (annotation && annotation.id) {
+                setTimeout(() => {
+                    applyColorToAnnotation(annotation);
+                }, 100);
+            }
+        });
+    };
+
+    // Функция для применения цвета к конкретной аннотации
+    const applyColorToAnnotation = (annotation) => {
+        if (!annotation || !annotation.body) {
+            console.warn('Invalid annotation object:', annotation);
+            return;
+        }
+
+        console.log('ANNOTATION BODY', annotation.body)
+
+        const colorBody = annotation.body.find(b => b.purpose === 'color');
+        const nodeColor = colorBody ? colorBody.value : '#FF0000';
+
+        // Находим элемент аннотации по ID
+        const annotationElement = document.querySelector(`[data-id="${annotation.id}"]`);
+        if (annotationElement) {
+            const innerElement = annotationElement.querySelector('.a9s-inner');
+            if (innerElement) {
+                innerElement.style.stroke = nodeColor;
+                innerElement.style.fill = nodeColor;
+
+                // Также добавляем кастомный атрибут для отладки
+                annotationElement.setAttribute('data-node-color', nodeColor);
+
+                const nodeIdBody = annotation.body.find(b => b.purpose === 'node-id');
+                if (nodeIdBody) {
+                    annotationElement.setAttribute('data-node-id', nodeIdBody.value);
+                }
+            }
+        }
+    };
+
     const findPageWithAnnotations = (annotations) => {
         if (!annotations || !annotations.length) return 0;
 
@@ -292,12 +453,37 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         return 0;
     };
 
-    // Эффект для обновления отображения сегментов при изменении showSegments
+    // Получение информации о цветах узлов для отображения в легенде
+    const getNodeColorInfo = () => {
+        if (!seg || !seg.length) return [];
+
+        const colorInfo = [];
+        const usedColors = new Set();
+
+        seg.forEach((segment, index) => {
+            const colorIndex = index % NODE_COLORS.length;
+            const color = NODE_COLORS[colorIndex];
+
+            // Добавляем только уникальные цвета
+            if (!usedColors.has(color)) {
+                usedColors.add(color);
+                colorInfo.push({
+                    color: color,
+                    nodeId: segment.id,
+                    type: segment.details?.nodule_type || 'Unknown'
+                });
+            }
+        });
+
+        return colorInfo;
+    };
+
     useEffect(() => {
         if (annoRef.current && viewerRef.current) {
             updateAnnotationsForPage(currentPage);
+            applyAnnotationStyles();
         }
-    }, [showSegments]);
+    }, [showSegments, currentPage]);
 
     useEffect(() => {
         if (annoRef.current) {
@@ -306,24 +492,23 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
     }, [tool]);
 
     useEffect(() => {
-        const date1 = new Date();
-        const date2 = new Date(date);
-        const timestamp1 = date1.getTime();
-        const timestamp2 = date2.getTime();
-        const difference = timestamp1 - timestamp2;
-        const daysDifference = Math.floor(difference / (1000 * 60));
-
-        console.log('Разница в минутах:', daysDifference);
+        // const date1 = new Date();
+        // const date2 = new Date(date);
+        // const timestamp1 = date1.getTime();
+        // const timestamp2 = date2.getTime();
+        // const difference = timestamp1 - timestamp2;
+        // const daysDifference = Math.floor(difference / (1000 * 60));
+        //
+        // console.log('Разница в минутах:', daysDifference);
 
         if (seg !== null && seg.length !== 0) {
             const annotations = prepareAnnotations();
 
-            // Если аннотации уже инициализированы, обновляем текущую страницу
             if (annoRef.current && viewerRef.current) {
                 const currentPage = viewerRef.current.currentPage();
                 updateAnnotationsForPage(currentPage);
+                applyAnnotationStyles();
 
-                // Автоматически переключаемся на страницу с аннотациями
                 const pageWithAnnotations = findPageWithAnnotations(annotations);
                 if (pageWithAnnotations !== currentPage) {
                     console.log(`Auto-switching to page ${pageWithAnnotations} with annotations`);
@@ -334,93 +519,23 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
             }
         } else {
             setClosed(false);
-
-            if(!closed && daysDifference > 30) {
-                alert("Прогнозирование еще не окончено.\nПосетите страницу результата позже.");
-                setClosed(true);
-            }
+            // if(!closed && daysDifference > 30) {
+            //     alert("Прогнозирование еще не окончено.\nПосетите страницу результата позже.");
+            //     setClosed(true);
+            // }
         }
     }, [anno, seg]);
-
-    const formatter = (annotation) => {
-        const isA = annotation.bodies.find(b => {
-            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 1'
-        });
-        const isB = annotation.bodies.find(b => {
-            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 2'
-        });
-        const isC = annotation.bodies.find(b => {
-            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 3'
-        });
-        const isD = annotation.bodies.find(b => {
-            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 4'
-        });
-        const isE = annotation.bodies.find(b => {
-            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 5'
-        });
-        const isAI = annotation.bodies.find(b => {
-            return b.purpose === 'tagging' && b.value.toLowerCase() === 'ai'
-        });
-        const isDOC = annotation.bodies.find(b => {
-            return b.purpose === 'tagging' && b.value.toLowerCase() === 'doctor result'
-        });
-        if (isDOC) {
-            const isDOCA = annotation.bodies.find(b => {
-                return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 1'
-            });
-            const isDOCB = annotation.bodies.find(b => {
-                return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 2'
-            });
-            const isDOCC = annotation.bodies.find(b => {
-                return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 3'
-            });
-            const isDOCD = annotation.bodies.find(b => {
-                return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 4'
-            });
-            const isDOCE = annotation.bodies.find(b => {
-                return b.purpose === 'tagging' && b.value.toLowerCase() === 'ti-rads 5'
-            });
-            if (isDOCA) {
-                return 'DOC-A';
-            }
-            if (isDOCB) {
-                return 'DOC-B';
-            }
-            if (isDOCC) {
-                return 'DOC-C';
-            }
-            if (isDOCD) {
-                return 'DOC-D';
-            }
-            if (isDOCE) {
-                return 'DOC-E';
-            }
-            return 'DOC';
-        }
-        if (isA) {
-            return 'A';
-        }
-        if (isB) {
-            return 'B';
-        }
-        if (isC) {
-            return 'C';
-        }
-        if (isD) {
-            return 'D';
-        }
-        if (isE) {
-            return 'E';
-        }
-    }
 
     useEffect(() => {
         if (image !== null){
             const viewer_tmp = initOpenseadragon()
-            initializeAnnotations(viewer_tmp)
-
-            // Добавляем обработчик смены страницы
+            const annotateState = initializeAnnotations(viewer_tmp)
             viewer_tmp.addHandler('page', handlePageChange);
+
+            // Применяем стили после инициализации
+            setTimeout(() => {
+                applyAnnotationStyles();
+            }, 500);
         }
     },[image]);
 
@@ -435,12 +550,27 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
         })
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleAnnotations = () => {
         const num = viewer.currentPage()
         anno.clearAnnotations()
-        for (let tmp of tiffanno[num]) {
-            anno.addAnnotation(tmp)
+
+        if (tiffanno[num] && tiffanno[num].length > 0) {
+            tiffanno[num].forEach(tmp => {
+                if (tmp && tmp.id) {
+                    anno.addAnnotation(tmp)
+                }
+            });
+
+            // Применяем стили после загрузки аннотаций
+            setTimeout(() => {
+                if (tiffanno[num] && tiffanno[num].length > 0) {
+                    tiffanno[num].forEach(annotation => {
+                        if (annotation && annotation.id) {
+                            applyColorToAnnotation(annotation);
+                        }
+                    });
+                }
+            }, 100);
         }
     }
 
@@ -516,6 +646,15 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
                 await axios.delete(url + '/uzi/segment/' + imageid + '/' + annotation.id).then((response) => {
                 })
             });
+
+            // Применяем стили при создании аннотаций
+            anno.on('createAnnotation', (annotation) => {
+                if (annotation && annotation.id) {
+                    setTimeout(() => {
+                        applyColorToAnnotation(annotation);
+                    }, 100);
+                }
+            });
         }
     }, [anno])
 
@@ -524,6 +663,8 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
             handleOverlay()
         }
     }, [viewer])
+
+    const nodeColorInfo = getNodeColorInfo();
 
     return (
         <div style={{position: 'relative', width: '100%', height: '100%'}}>
@@ -735,6 +876,46 @@ const OpenSeadragonViewer = ({image, boxes, tool, url, seg, type, imageid, lengt
                         {showSegments ? 'ВКЛ' : 'ВЫКЛ'}
                     </div>
                 </div>
+
+                {/* Легенда цветов узлов */}
+                {showSegments && nodeColorInfo.length > 0 && (
+                    <>
+                        <div style={{
+                            height: '1px',
+                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            margin: '4px 0'
+                        }}></div>
+
+                        <div style={{
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            color: '#333',
+                            marginBottom: '4px'
+                        }}>
+                            Узлы:
+                        </div>
+
+                        {nodeColorInfo.map((info, index) => (
+                            <div key={index} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                fontSize: '12px',
+                                color: '#666'
+                            }}>
+                                <div style={{
+                                    width: '12px',
+                                    height: '12px',
+                                    backgroundColor: info.color,
+                                    borderRadius: '2px',
+                                    border: '1px solid rgba(0,0,0,0.2)'
+                                }}></div>
+                                <span>Узел {info.nodeId}</span>
+                            </div>
+                        ))}
+                    </>
+                )}
             </div>
 
             {/* Отображение номера слайда в левом нижнем углу */}
