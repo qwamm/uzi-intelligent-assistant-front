@@ -279,7 +279,7 @@ class SignUpPage extends React.Component {
                                             backgroundClip: 'text'
                                         }}
                                     >
-                                        Зарегистрироваться
+                                        Регистрация
                                     </Typography>
                                 </Box>
 

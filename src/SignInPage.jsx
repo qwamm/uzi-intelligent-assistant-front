@@ -216,17 +216,7 @@ class SignInPage extends React.Component {
                                             backgroundClip: 'text'
                                         }}
                                     >
-                                        Добро пожаловать
-                                    </Typography>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: '#7f8c8d',
-                                            fontWeight: '400',
-                                            fontSize: '1.1rem'
-                                        }}
-                                    >
-                                        Войдите в свою учетную запись
+                                        Вход в систему
                                     </Typography>
                                 </Box>
 
@@ -410,7 +400,7 @@ class SignInPage extends React.Component {
                                         textShadow: '0 4px 20px rgba(0,0,0,0.2)'
                                     }}
                                 >
-                                    Интеллектуальный ассистент УЗИ диагностики новообразований щитовидной железы
+                                    Интеллектуальный ассистент врача ультразвуковой диагностики узловых образований щитовидной железы по ТУ 58.29.32-001-02066569-2025
                                 </Typography>
                             </Box>
                         </Box>
