@@ -11,23 +11,15 @@ export default function CustomizedAccordions() {
     };
 
     return (
+        <Box sx={{ paddingTop: '30px' }}>
         <Box
             sx={{
-                backgroundColor: '#f8fafc',
                 padding: { xs: 4, md: 10 },
-                borderRadius: { xs: 4, md: 8 },
                 height: 'auto',
-                minHeight: 600,
                 width: 'auto',
-                minWidth: 300,
                 maxWidth: 1200,
+                maxHeight: 700,
                 margin: '0 auto',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
-                background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
-                border: '1px solid #e2e8f0',
-                '&:hover': {
-                    boxShadow: '0 15px 50px rgba(0,0,0,0.12)',
-                }
             }}
         >
             <Typography
@@ -179,6 +171,7 @@ export default function CustomizedAccordions() {
                     </AccordionDetails>
                 </Accordion>
             ))}
+        </Box>
         </Box>
     );
 }
