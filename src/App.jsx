@@ -4,7 +4,7 @@ import UploadPage from "./UploadPage";
 import ResultsPageInterface from "./ResultsPage";
 import FAQPage from "./FAQPage";
 import Fab from '@mui/material/Fab';
-import {Link, Route, Routes, Navigate, useLocation} from "react-router-dom";
+import {Link, Route, Routes, Navigate, useLocation, useNavigate} from "react-router-dom"; // Добавили useNavigate
 import {
     AppBar, Badge,
     Box, Button,
@@ -90,6 +90,7 @@ function App(props) {
     const [mesAm, setMesAm] = React.useState(0)
     const { setIsOpen, setSteps, setCurrentStep} = useTour()
     const location = useLocation()
+    const navigate = useNavigate() // Добавили useNavigate
     const page = location.pathname
 
     useEffect(() =>  {
@@ -144,11 +145,14 @@ function App(props) {
             })
         }
     }, [props.url])
+
     const handleExit = () => {
         localStorage.setItem('access', null)
         localStorage.setItem('refresh', null)
         setSignIn(true)
+        navigate('/sign_in')
     }
+
     const handleIntro = () => {
         console.log(page.split('/')[1])
         if(page === '/home'){
@@ -184,6 +188,8 @@ function App(props) {
         setCurrentStep(0)
         setIsOpen(true)
     }
+
+    const showAppBar = !showSignIn && !['/sign_in', '/sign_up'].includes(location.pathname)
 
     const Home = (showSignIn, props) => {
         if (showSignIn) {
@@ -256,122 +262,120 @@ function App(props) {
     return (
         <div>
             <div className={'start-step'}>
-                <Box component={""} hidden={showSignIn} sx={{ borderBottomRightRadius: 6, borderBottomLeftRadius: 6, backgroundColor: '#bae7f6', marginBlock:0, marginInline:0, minWidth: 500, width: 'auto'}} >
-                    <AppBar elevation={0} hidden={showSignIn} position="absolute" sx={{
-                        borderBottomRightRadius: 6,
-                        borderBottomLeftRadius: 6,
-                        backgroundColor: '#4FB3EAFF', minWidth: 600
-                    }}>
-                        <Toolbar sx={{
-                            minWidth: 600,
-                            width: '100%',
-                            backgroundColor: '#fdfdfd',
-                            boxShadow: "0px 10px 20px gainsboro",
-                            marginBlock: 0,
-                            marginInline: 0,
-                            justifyContent: 'space-around',
+                {showAppBar && ( // Условный рендеринг AppBar
+                    <Box component={""} sx={{ borderBottomRightRadius: 6, borderBottomLeftRadius: 6, backgroundColor: '#bae7f6', marginBlock:0, marginInline:0, minWidth: 500, width: 'auto'}} >
+                        <AppBar elevation={0} position="absolute" sx={{
+                            borderBottomRightRadius: 6,
+                            borderBottomLeftRadius: 6,
+                            backgroundColor: '#4FB3EAFF', minWidth: 600
                         }}>
-                            <Box
-                                component="img"
-                                src="/static/header.svg"
-                                alt="Второе мнение"
-                                sx={{
-                                    position: 'absolute',
-                                    left: 45,
-                                    height: 'auto', // регулируйте высоту по необходимости
-                                    width: 300, // ширина автоматически подстроится
-                                }}
-                            />
-                            <Grid
-                                container
-                                hidden={showSignIn}
-                                direction="row"
-                                spacing={2}
-                                alignItems="center"
-                            >
-                                {['Пациенты', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
-                                    <Grid
-                                        item
-                                        key={text}
-                                        xs="auto"
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            flex: index === 1 ? '1 0 auto' : '0 1 auto'
-                                        }}
-                                    >
-                                        <Button
-                                            variant={'outlined'}
-                                            component={Link}
+                            <Toolbar sx={{
+                                minWidth: 600,
+                                width: '100%',
+                                backgroundColor: '#fdfdfd',
+                                boxShadow: "0px 10px 20px gainsboro",
+                                marginBlock: 0,
+                                marginInline: 0,
+                                justifyContent: 'space-around',
+                            }}>
+                                <Box
+                                    component="img"
+                                    src="/static/header.svg"
+                                    alt="Второе мнение"
+                                    sx={{
+                                        position: 'absolute',
+                                        left: 45,
+                                        height: 'auto',
+                                        width: 300,
+                                    }}
+                                />
+                                <Grid
+                                    container
+                                    direction="row"
+                                    spacing={2}
+                                    alignItems="center"
+                                >
+                                    {['Пациенты', 'Добавить снимок', 'Помощь', 'Выйти'].map((text, index) => (
+                                        <Grid
+                                            item
+                                            key={text}
+                                            xs="auto"
                                             sx={{
-                                                height: 65,
-                                                minWidth: index === 1 ? 160 : 100,
-                                                paddingX: 2,
-                                                marginBlock: 0,
-                                                fontFamily: 'Roboto',
-                                                borderColor: 'white',
-                                                borderRadius: 0,
-                                                borderBottomColor: "white",
-                                                borderBottomWidth: 0,
-                                                fontWeight: index === 1 ? 'normal' : 'lighter',
-                                                color: 'dimgray',
-                                                textTransform: 'none',
-                                                boxShadow: 0,
-                                                '&:hover': {
-                                                    color: "#4FB3EAFF",
-                                                    borderColor: 'white',
-                                                    borderBottomColor: "#4FB3EAFF",
-                                                    borderRadius: 0,
-                                                    borderBottomWidth: 5,
-                                                    backgroundColor: 'white'
-                                                },
-                                                '&:active': {
-                                                    color: "#4FB3EAFF",
-                                                    borderColor: 'white',
-                                                    borderBottomColor: "#4FB3EAFF",
-                                                    borderRadius: 0,
-                                                    borderBottomWidth: 5,
-                                                    backgroundColor: 'white'
-                                                },
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flex: index === 1 ? '1 0 auto' : '0 1 auto'
                                             }}
-                                            to={index === 1 ? `home` : index === 0 ? `patients` : index === 2 ? `faq` : `sign_in`}
-                                            onClick={index === 4 ? handleExit : null}
                                         >
-                                            {index === 3 && (
-                                                <ExitToAppIcon
-                                                    sx={{
-                                                        fontSize: 20,
-                                                        color: "dimgray",
-                                                        marginRight: 1,
-                                                        '&:hover': {
-                                                            color: "#4FB3EAFF"
-                                                        },
-                                                    }}
-                                                />
-                                            )}
-                                            <Badge
-                                                badgeContent={localStorage.getItem('mesAm')}
-                                                invisible={index !== 1 || localStorage.getItem('mesAm') == 0}
+                                            <Button
+                                                variant={'outlined'}
+                                                component={index === 3 ? 'button' : Link} // Для кнопки "Выйти" используем button
                                                 sx={{
-                                                    "& .MuiBadge-badge": {
-                                                        color: "white",
-                                                        backgroundColor: "#4FB3EAFF",
-                                                    }
+                                                    height: 65,
+                                                    minWidth: index === 1 ? 160 : 100,
+                                                    paddingX: 2,
+                                                    marginBlock: 0,
+                                                    fontFamily: 'Roboto',
+                                                    borderColor: 'white',
+                                                    borderRadius: 0,
+                                                    borderBottomColor: "white",
+                                                    borderBottomWidth: 0,
+                                                    fontWeight: index === 1 ? 'normal' : 'lighter',
+                                                    color: 'dimgray',
+                                                    textTransform: 'none',
+                                                    boxShadow: 0,
+                                                    '&:hover': {
+                                                        color: "#4FB3EAFF",
+                                                        borderColor: 'white',
+                                                        borderBottomColor: "#4FB3EAFF",
+                                                        borderRadius: 0,
+                                                        borderBottomWidth: 5,
+                                                        backgroundColor: 'white'
+                                                    },
+                                                    '&:active': {
+                                                        color: "#4FB3EAFF",
+                                                        borderColor: 'white',
+                                                        borderBottomColor: "#4FB3EAFF",
+                                                        borderRadius: 0,
+                                                        borderBottomWidth: 5,
+                                                        backgroundColor: 'white'
+                                                    },
                                                 }}
+                                                to={index === 1 ? `home` : index === 0 ? `patients` : index === 2 ? `faq` : null}
+                                                onClick={index === 3 ? handleExit : null} // Только для кнопки "Выйти"
                                             >
-                                                {text}
-                                            </Badge>
-                                        </Button>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Toolbar>
-                    </AppBar>
-                </Box>
-                {/*<Fab variant={'extended'} sx={{position: 'fixed', bottom:20, right:20, backgroundColor: "#ffffff", color: '#4FB3EAFF', width:40, height:40}} component={Link} to={`/faq`}>*/}
-                {/*    <QuestionMarkIcon></QuestionMarkIcon>*/}
-                {/*</Fab>*/}
+                                                {index === 3 && (
+                                                    <ExitToAppIcon
+                                                        sx={{
+                                                            fontSize: 20,
+                                                            color: "dimgray",
+                                                            marginRight: 1,
+                                                            '&:hover': {
+                                                                color: "#4FB3EAFF"
+                                                            },
+                                                        }}
+                                                    />
+                                                )}
+                                                <Badge
+                                                    badgeContent={localStorage.getItem('mesAm')}
+                                                    invisible={index !== 1 || localStorage.getItem('mesAm') == 0}
+                                                    sx={{
+                                                        "& .MuiBadge-badge": {
+                                                            color: "white",
+                                                            backgroundColor: "#4FB3EAFF",
+                                                        }
+                                                    }}
+                                                >
+                                                    {text}
+                                                </Badge>
+                                            </Button>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </Toolbar>
+                        </AppBar>
+                    </Box>
+                )}
                 <Fab disabled={showSignIn} variant={'extended'} sx={{
                     position: 'fixed',
                     bottom: 20,
@@ -399,6 +403,5 @@ function App(props) {
         </div>
     );
 }
-
 
 export default App;

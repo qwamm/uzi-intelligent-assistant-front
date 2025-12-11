@@ -31,8 +31,6 @@ import Gallery from "./Gallery";
 import DoneSharpIcon from "@mui/icons-material/DoneSharp";
 import Typography from "@mui/material/Typography";
 import {Document, Font, Page, PDFDownloadLink, StyleSheet, Text, View} from '@react-pdf/renderer';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ClearIcon from "@mui/icons-material/Clear";
 
 
@@ -52,7 +50,7 @@ const styles = StyleSheet.create({
     },
     sectionHeader: {
         textAlign: 'right', margin: 0, paddingTop: 5, paddingRight: 5, width: 200, alignSelf: 'flex-end',
-        fontSize: 10, color: '#4fb3ea',
+        fontSize: 10, color: '#1520a6',
     },
     sectionEnd: {
         textAlign: 'left', margin: 0, paddingTop: 5, paddingLeft: 10, alignSelf: 'flex-start',
@@ -68,7 +66,7 @@ const styles = StyleSheet.create({
     },
     sectionInfo: {
         textAlign: 'center', marginBlock: 0, paddingTop: 1,
-        fontSize: 13, color: '#4fb3ea',
+        fontSize: 13, color: '#1520a6',
     },
     sectionPolicy: {
         textAlign: 'left', marginBlock: -10, paddingLeft: 10, justifyContent: 'auto',
@@ -123,7 +121,7 @@ const MyDocument = (props) => (
             </View>
             <View style={styles.sectionPatient2}>
                 <Text style={styles.russianMedium}>Общий объем щитовидной железы: </Text>
-                <Text style={styles.russianLight}>{props.volume} см3</Text>
+                <Text style={styles.russianLight}>{props.volume} см³</Text>
             </View>
             <View style={styles.sectionPatient2}>
                 <Text style={styles.russianMedium}>Перешеек: </Text>
@@ -134,14 +132,14 @@ const MyDocument = (props) => (
             </View>
             <View style={styles.sectionPatient}>
                 <Text style={styles.russianMedium}>Размеры: </Text>
-                <Text style={styles.russianLight}>Длина - {props.right_length} см, Ширина - {props.right_width} см, Толщина  - {props.right_depth} см, Объем - {props.right_volume} см3  </Text>
+                <Text style={styles.russianLight}>Длина - {props.right_length} см, Ширина - {props.right_width} см, Толщина  - {props.right_depth} см, Объем - {props.right_volume} см³  </Text>
             </View>
             <View style={styles.sectionSubTitle}>
                 <Text style={styles.russianMedium}>Левая доля</Text>
             </View>
             <View style={styles.sectionPatient}>
                 <Text style={styles.russianMedium}>Размеры: </Text>
-                <Text style={styles.russianLight}>Длина - {props.left_length} см, Ширина - {props.left_width} см, Толщина  - {props.left_depth} см, Объем - {props.left_volume} см3  </Text>
+                <Text style={styles.russianLight}>Длина - {props.left_length} см, Ширина - {props.left_width} см, Толщина  - {props.left_depth} см, Объем - {props.left_volume} см³  </Text>
             </View>
             <View style={styles.sectionPatient2}>
                 <Text style={styles.russianMedium}>Васкуляризация при ЦДК: </Text>
@@ -177,7 +175,7 @@ const MyDocument = (props) => (
                 <Text style={styles.russianMedium}>Заключение</Text>
             </View>
             <View style={styles.sectionPatient}>
-                <Text style={styles.russianLight}>{props.result} </Text>
+                <Text style={styles.russianLight}>{props.segmentation_summary} </Text>
             </View>
             <View style={styles.sectionCont}>
                 <View style={styles.sectionEnd}>
@@ -199,7 +197,80 @@ const MyDocument = (props) => (
     </Document>
 );
 
-const theme = createTheme()
+const theme = createTheme();
+
+// Стилизованные кнопки
+const PrimaryButton = styled(Button)({
+    backgroundColor: '#4FB3EA',
+    color: '#FFFFFF',
+    padding: '12px 24px',
+    borderRadius: '12px',
+    textTransform: 'none',
+    fontSize: '16px',
+    fontWeight: 600,
+    fontFamily: 'Roboto, sans-serif',
+    boxShadow: '0 4px 12px rgba(79, 179, 234, 0.3)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    '&:hover': {
+        backgroundColor: '#3A9BD6',
+        boxShadow: '0 6px 20px rgba(79, 179, 234, 0.4)',
+        transform: 'translateY(-2px)',
+    },
+    '&:active': {
+        transform: 'translateY(0)',
+        boxShadow: '0 2px 10px rgba(79, 179, 234, 0.3)',
+    },
+    '&:disabled': {
+        backgroundColor: '#E0E0E0',
+        color: '#9E9E9E',
+        boxShadow: 'none',
+    },
+});
+
+const OutlineButton = styled(Button)({
+    color: '#4FB3EA',
+    backgroundColor: 'transparent',
+    border: '2px solid #4FB3EA',
+    borderRadius: '12px',
+    padding: '12px 24px',
+    textTransform: 'none',
+    fontSize: '16px',
+    fontWeight: 600,
+    fontFamily: 'Roboto, sans-serif',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    '&:hover': {
+        backgroundColor: 'rgba(79, 179, 234, 0.08)',
+        borderColor: '#3A9BD6',
+        color: '#3A9BD6',
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 12px rgba(79, 179, 234, 0.15)',
+    },
+    '&:active': {
+        transform: 'translateY(0)',
+    },
+});
+
+const SecondaryButton = styled(Button)({
+    color: '#FFFFFF',
+    backgroundColor: '#00D995',
+    borderRadius: '12px',
+    padding: '12px 24px',
+    textTransform: 'none',
+    fontSize: '16px',
+    fontWeight: 600,
+    fontFamily: 'Roboto, sans-serif',
+    boxShadow: '0 4px 12px rgba(0, 217, 149, 0.3)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    '&:hover': {
+        backgroundColor: '#00C585',
+        boxShadow: '0 6px 20px rgba(0, 217, 149, 0.4)',
+        transform: 'translateY(-2px)',
+    },
+    '&:active': {
+        transform: 'translateY(0)',
+    },
+});
+
 export const TextFieldResult = styled(TextField)`
     fieldset {
         border-radius: 10px;
@@ -215,20 +286,44 @@ function BootstrapDialogTitle(props) {
     const {children, onClose, ...other} = props;
 
     return (
-        <DialogTitle sx={{width: 2000}}{...other}>
-            {children}
+        <DialogTitle sx={{
+            width: '100%',
+            padding: '28px 32px 20px',
+            backgroundColor: '#F8FBFF',
+            borderBottom: '1px solid #E3F2FD',
+            borderRadius: '24px 24px 0 0',
+            position: 'relative'
+        }} {...other}>
+            <Typography variant="h5" component="div" sx={{
+                color: '#194964',
+                fontWeight: 600,
+                fontSize: '24px',
+                fontFamily: 'Roboto',
+                letterSpacing: '-0.5px',
+            }}>
+                {children}
+            </Typography>
             {onClose ? (
                 <IconButton
                     aria-label="close"
                     onClick={onClose}
                     sx={{
                         position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
+                        right: 24,
+                        top: 24,
+                        color: '#90A4AE',
+                        backgroundColor: 'rgba(144, 164, 174, 0.08)',
+                        width: 40,
+                        height: 40,
+                        borderRadius: '10px',
+                        '&:hover': {
+                            backgroundColor: 'rgba(144, 164, 174, 0.12)',
+                            color: '#546E7A',
+                        },
+                        transition: 'all 0.2s ease'
                     }}
                 >
-                    <CloseIcon/>
+                    <CloseIcon />
                 </IconButton>
             ) : null}
         </DialogTitle>
@@ -239,9 +334,7 @@ function BootstrapDialogTitle(props) {
 const ResultsPageInterface = (props) => {
     const {number} = useParams();
     return (
-
         <ResultsPage props={number} url={props.url}></ResultsPage>
-
     )
 }
 
@@ -263,7 +356,7 @@ class ResultsPage extends React.Component {
             tiradsType: [],
             predictedTypes: new Set([]),
             shortResult: false,
-            cdk: "не измена",
+            cdk: "не изменена",
             diagnosis: "",
             echogenicity: "средняя",
             isthmus: 0,
@@ -271,7 +364,7 @@ class ResultsPage extends React.Component {
             left_length: 0,
             left_width: 0,
             position: "обычное",
-            profile: "чёткие, ровные",
+            contours: "чёткие, ровные",
             projection_type: "long",
             result: "без динамики",
             right_depth: 0,
@@ -308,359 +401,609 @@ class ResultsPage extends React.Component {
             imageId: 1,
             nodule_amount: 0,
             checked: false,
-            typesForReport:[],
+            typesForReport: [],
             doctorTiradsType: [],
             doctorTypes: new Set([]),
             aiTypes: new Set([]),
             expanded_info: false,
             slide_template: [],
-            image_count: 0
+            image_count: 0,
+            segmented_area_total: 0, // Новая переменная для общей площади сегментированных областей
+            nodule_details: [] // Детали узлов для отображения
         }
-        // this.handleStartPage();
-        // this.handleDoctor()
     }
+
     componentDidMount() {
         this.handleStartPage();
-        this.handleDoctor()
+        this.handleDoctor();
     }
 
     handleDoctor = () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
         axios.get(this.props.url+ '/med_worker/update/' + localStorage.getItem('id')).then((response) => {
-            //console.log(response.data)
             this.setState({
                 doctorName: response.data.last_name+" "+ response.data.first_name+" "+response.data.fathers_name,
                 medOrg: (response.data.med_organization === null||response.data.med_organization ===''?'Место работы не указано':response.data.med_organization) +",\n"+ (response.data.job === null||response.data.job ===''?'должность не указана':response.data.job)
             })
         })
     };
+
     handleResponse = () => {
-        this.handleExport()
+        this.handleExport();
     };
+
+    // Функция для расчета площади сегментированной области
+    calculateSegmentedArea = (segmentationData) => {
+        if (!segmentationData || segmentationData.length === 0) {
+            return 0;
+        }
+
+        let totalArea = 0;
+        const noduleDetails = [];
+
+        // Для каждого сегмента рассчитываем площадь
+        segmentationData.forEach((segment, index) => {
+            // Получаем размеры узла из деталей
+            const width = segment.details?.nodule_width || 1;
+            const length = segment.details?.nodule_length || 1;
+
+            // Расчет площади (предполагаем эллиптическую форму)
+            // Площадь эллипса = π * a * b, где a и b - полуоси
+            const area = Math.PI * (width / 2) * (length / 2);
+
+            totalArea += area;
+
+            noduleDetails.push({
+                index: index + 1,
+                type: segment.details?.nodule_type || 0,
+                width: width,
+                length: length,
+                height: segment.details?.nodule_height || 1,
+                area: area,
+                is_ai: segment.is_ai || false
+            });
+        });
+
+        return { totalArea, noduleDetails };
+    };
+
+    getSegmentationSummary = () => {
+        const { segmentation } = this.state;
+
+        if (!segmentation || segmentation.length === 0) {
+            return "";
+        }
+
+        const PIXEL_SIZE_CM = 0.005; // Размер пикселя в см
+
+        let summary = "Обнаружены узловые образования щитовидной железы:\n\n";
+        let totalVolume = 0;
+
+        segmentation.forEach((segment, index) => {
+            const points = segment.data?.[0]?.points || [];
+            const details = segment.details || {};
+            const noduleType = details.nodule_type || 0;
+
+            if (points.length === 0) {
+                summary += `Узел ${index + 1}: данные контура отсутствуют, TI-RADS ${noduleType}\n\n`;
+                return;
+            }
+
+            const areaPixels = this.calculatePolygonArea(points);
+            const areaCm2 = areaPixels * (PIXEL_SIZE_CM * PIXEL_SIZE_CM);
+
+            const { widthPixels, lengthPixels } = this.calculateNoduleDimensions(points);
+            const widthCm = widthPixels * PIXEL_SIZE_CM;
+            const lengthCm = lengthPixels * PIXEL_SIZE_CM;
+
+            const thicknessCm = this.estimateNoduleThickness(widthCm, lengthCm, areaCm2);
+
+            const volumeCm3 = (2*Math.PI / 3) * widthCm * lengthCm * thicknessCm;
+
+            totalVolume += volumeCm3;
+
+            summary += `Узел ${index + 1}: ${widthCm.toFixed(2)}×${lengthCm.toFixed(2)}×${thicknessCm.toFixed(2)} см\n`;
+            summary += `   Объём: ${volumeCm3.toFixed(2)} см³\n`;
+            summary += `   TI-RADS: ${noduleType}\n`;
+
+            if (segment.is_ai) {
+                const tirads23 = details.nodule_2_3 || 0;
+                const tirads4 = details.nodule_4 || 0;
+                const tirads5 = details.nodule_5 || 0;
+
+                if (tirads23 > 0 || tirads4 > 0 || tirads5 > 0) {
+                    summary += `   Классы новообразований, определенные ассистентом:: `;
+                    if (tirads23 > 0) summary += `TI-RADS 2-3: ${(tirads23 * 100).toFixed(1)}% `;
+                    if (tirads4 > 0) summary += `TI-RADS 4: ${(tirads4 * 100).toFixed(1)}% `;
+                    if (tirads5 > 0) summary += `TI-RADS 5: ${(tirads5 * 100).toFixed(1)}%`;
+                    summary += `\n`;
+                }
+            }
+
+            summary += `\n`;
+        });
+
+        summary += `Количество узлов: ${segmentation.length}\n`;
+        summary += `Общий объем узлов: ${totalVolume.toFixed(2)} см³\n`;
+
+        if (totalVolume === 0) {
+            summary += `- Узловые образования отсутствуют\n`;
+        } else if (totalVolume < 1) {
+            summary += `- Общий объем узлов ${totalVolume.toFixed(2)} см³ (незначительный)\n`;
+            summary += `- УЗ-признаки диффузно очаговых изменений щитовидной железы. Рекомендовано динамическое наблюдение\n`;
+        } else if (totalVolume < 5) {
+            summary += `- Общий объем узлов ${totalVolume.toFixed(2)} см³ (умеренный)\n`;
+            summary += `- УЗ-признаки диффузно очаговых изменений щитовидной железы. Рекомендовано УЗИ-контроль через 6-12 месяцев\n`;
+        } else {
+            summary += `- Общий объем узлов ${totalVolume.toFixed(2)} см³ (значительный)\n`;
+            summary += `- УЗ-признаки диффузно очаговых изменений щитовидной железы. Рекомендована консультация эндокринолога, биопсия по показаниям\n`;
+        }
+
+        if (this.state.total_nodule_volume !== totalVolume) {
+            this.setState({
+                total_nodule_volume: totalVolume
+            });
+        }
+
+        return summary;
+    };
+
+// Расчет площади многоугольника по координатам вершин
+    calculatePolygonArea = (points) => {
+        if (!points || points.length < 3) return 0;
+
+        let area = 0;
+        const n = points.length;
+
+        for (let i = 0; i < n; i++) {
+            const j = (i + 1) % n;
+            area += points[i].x * points[j].y;
+            area -= points[j].x * points[i].y;
+        }
+
+        return Math.abs(area) / 2;
+    };
+
+    // Расчет длины и ширины узла
+    calculateNoduleDimensions = (points) => {
+        if (!points || points.length === 0) {
+            return { widthPixels: 0, lengthPixels: 0 };
+        }
+
+        let minX = Infinity, maxX = -Infinity;
+        let minY = Infinity, maxY = -Infinity;
+
+        points.forEach(point => {
+            if (point.x < minX) minX = point.x;
+            if (point.x > maxX) maxX = point.x;
+            if (point.y < minY) minY = point.y;
+            if (point.y > maxY) maxY = point.y;
+        });
+
+        const widthPixels = maxX - minX;
+        const lengthPixels = maxY - minY;
+
+        return { widthPixels, lengthPixels };
+    };
+
+    //TODO: подумать как сделать более точный расчт толщины узлов
+    estimateNoduleThickness = (widthCm, lengthCm, areaCm2) => {
+        if (widthCm <= 0 || lengthCm <= 0) return 0;
+
+
+        const smallerDimension = Math.min(widthCm, lengthCm);
+
+        let thickness;
+
+        if (areaCm2 > 0) {
+            thickness = smallerDimension * 0.7;
+        } else {
+            thickness = smallerDimension * 0.8;
+        }
+
+        return Math.max(0.2, Math.min(thickness, 3.0));
+    };
+
+    // calculateSegmentedAreaAndVolume = (segmentationData) => {
+    //     if (!segmentationData || segmentationData.length === 0) {
+    //         return { totalArea: 0, totalVolume: 0, noduleDetails: [] };
+    //     }
+    //
+    //     const PIXEL_SIZE_CM = 0.015;
+    //     let totalArea = 0;
+    //     let totalVolume = 0;
+    //     const noduleDetails = [];
+    //
+    //     segmentationData.forEach((segment, index) => {
+    //         const points = segment.data?.[0]?.points || [];
+    //         const details = segment.details || {};
+    //
+    //         if (points.length === 0) {
+    //             noduleDetails.push({
+    //                 index: index + 1,
+    //                 type: details.nodule_type || 0,
+    //                 width: 0,
+    //                 length: 0,
+    //                 height: 0,
+    //                 area: 0,
+    //                 volume: 0,
+    //                 is_ai: segment.is_ai || false
+    //             });
+    //             return;
+    //         }
+    //
+    //         const areaPixels = this.calculatePolygonArea(points);
+    //         const areaCm2 = areaPixels * (PIXEL_SIZE_CM * PIXEL_SIZE_CM);
+    //
+    //         const { widthPixels, lengthPixels } = this.calculateNoduleDimensions(points);
+    //         const widthCm = widthPixels * PIXEL_SIZE_CM;
+    //         const lengthCm = lengthPixels * PIXEL_SIZE_CM;
+    //
+    //         const thicknessCm = this.estimateNoduleThickness(widthCm, lengthCm, areaCm2);
+    //
+    //         const volumeCm3 = (Math.PI / 6) * widthCm * lengthCm * thicknessCm;
+    //
+    //         totalArea += areaCm2;
+    //         totalVolume += volumeCm3;
+    //
+    //         noduleDetails.push({
+    //             index: index + 1,
+    //             type: details.nodule_type || 0,
+    //             width: widthCm,
+    //             length: lengthCm,
+    //             height: thicknessCm,
+    //             area: areaCm2,
+    //             volume: volumeCm3,
+    //             is_ai: segment.is_ai || false,
+    //             tirads_2_3: details.nodule_2_3 || 0,
+    //             tirads_4: details.nodule_4 || 0,
+    //             tirads_5: details.nodule_5 || 0,
+    //             point_count: points.length
+    //         });
+    //     });
+    //
+    //     return {
+    //         totalArea,
+    //         totalVolume,
+    //         noduleDetails
+    //     };
+    // };
+
     handleStartPage = () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
         axios.get(this.props.url + "/uzi/" + this.props.props + "/?format=json")
             .then((response) => {
-                this.setState({startData: response.data.info})
-                console.log(response.data)
+                this.setState({startData: response.data.info});
+
+                // Получаем список устройств
                 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
                 axios.get(this.props.url + "/uzi/devices/?format=json")
                     .then((res) => {
-                        this.setState({devices: res.data.results})
-                        const tmp = res.data.results
+                        this.setState({devices: res.data.results});
+                        const tmp = res.data.results;
                         for (let cur of tmp) {
                             if (cur.name === response.data.info.uzi_device_name) {
                                 this.setState({
                                     uziDevice: cur
-                                })
-                                // console.log(cur)
+                                });
                             }
                         }
-                    })
-                if(response.data.segmentation.nodule_type === undefined){
-                    let ar = [false, false, false, false, false]
-                    let ar2 = [false, false, false, false, false]
-                    let arr = []
-                    this.state.aiTypes.clear()
-                    for(let item of response.data.segmentation){
-                        if(!item.is_ai){
-                            this.setState({
-                                checked: true,
-                                groupId: item.id,
-                                currentType: Number(item.details.nodule_type),
-                                currentWidth: item.details.nodule_width,
-                                currentLength: item.details.nodule_length,
-                                currentHeight: item.details.nodule_height,
+                    });
 
-                            })
-                            this.state.doctorTypes.add(item)
-                        }
-                        else {
-                            this.state.aiTypes.add(item)
-                        }
-                        if(item.details.nodule_type === 1){
-                            if(!item.is_ai){
-                                ar2[0] = true
-                            }
-                            else{
-                                ar[0] = true
-                            }
-                        }
-                        if(item.details.nodule_type === 2){
-                            if(!item.is_ai){
-                                ar2[1] = true
-                            }
-                            else{
-                                ar[1] = true
-                            }
-                        }
-                        if(item.details.nodule_type === 3){
-                            if(!item.is_ai){
-                                ar2[2] = true
-                            }
-                            else{
-                                ar[2] = true
-                            }
-                        }
-                        if(item.details.nodule_type === 4){
-                            if(!item.is_ai){
-                                ar2[3] = true
-                            }
-                            else{
-                                ar[3] = true
-                            }
-                        }
-                        if(item.details.nodule_type === 5){
-                            if(!item.is_ai){
-                                ar2[4] = true
-                            }
-                            else{
-                                ar[4] = true
-                            }
-                        }
-                        arr.push(`TI-RADS ${item.details.nodule_type} ${!item.is_ai?'- подтверждено врачом':'- определил ассистент'}`)
-                    }
-                    this.setState({
-                        tiradsType: ar,
-                        typesForReport: arr,
-                        doctorTiradsType: ar2
-                    })
+                // Обработка данных сегментации
+                let segmentationData = response.data.segmentation;
+
+                // Если segmentation не массив, преобразуем в массив
+                if (segmentationData && !Array.isArray(segmentationData)) {
+                    segmentationData = [segmentationData];
                 }
-                this.setState({
-                    slide_template: response.data.image.slide_template,
-                    image_count: response.data.image.image_count,
-                    uziDate: new Date(response.data.info.diagnos_date),
-                    predictedTypes: response.data.segmentation,
-                    nodule_amount: response.data.segmentation.length,
-                    segmentation: response.data.segmentation,
-                    patientCard: response.data.info.patient.id,
-                    patientPolicy: response.data.info.patient.personal_policy,
-                    patientLastName: response.data.info.patient.last_name,
-                    patientFirstName: response.data.info.patient.first_name,
-                    patientFathersName: response.data.info.patient.fathers_name,
-                    projectionType: response.data.info.details.projection_type!== undefined ? response.data.info.details.projection_type : 'long',
-                    longResult: response.data.info.echo_descr,
-                    originalImage: response.data.image.image,
-                    shortResult: response.data.info.has_nodules === 'T',
-                    cdk: response.data.info.details.cdk,
-                    diagnosis: response.data.info.diagnosis,
-                    echogenicity: response.data.info.details.echogenicity,
-                    isthmus: response.data.info.details.isthmus,
-                    left_depth: response.data.info.details.left_depth,
-                    left_length: response.data.info.details.left_length,
-                    left_width: response.data.info.details.left_width,
-                    position: response.data.info.details.position,
-                    profile: response.data.info.details.profile,
-                    result: response.data.info.details.result,
-                    right_depth: response.data.info.details.right_depth,
-                    right_length: response.data.info.details.right_length,
-                    right_width: response.data.info.details.right_width,
-                    rln: response.data.info.details.rln,
-                    structure: response.data.info.details.structure,
-                    additional_data: response.data.info.details.additional_data,
-                    imageId: response.data.image.id,
-                    right_volume: !isNaN(0.479 * response.data.info.details.right_depth * response.data.info.details.right_length * response.data.info.details.right_width)? (0.479 * response.data.info.details.right_depth * response.data.info.details.right_length * response.data.info.details.right_width) : 0,
-                    left_volume: !isNaN(0.479 * response.data.info.details.left_depth * response.data.info.details.left_length * response.data.info.details.left_width)? (0.479 * response.data.info.details.left_depth * response.data.info.details.left_length * response.data.info.details.left_width) : 0,
-                    volume: !isNaN(0.479 * response.data.info.details.left_depth * response.data.info.details.left_length * response.data.info.details.left_width + 0.479 * response.data.info.details.right_depth * response.data.info.details.right_length * response.data.info.details.right_width)? (0.479 * response.data.info.details.left_depth * response.data.info.details.left_length * response.data.info.details.left_width + 0.479 * response.data.info.details.right_depth * response.data.info.details.right_length * response.data.info.details.right_width):0,
-                })
-            })
 
-    }
+                // Расчет площади сегментированных областей
+                const { totalArea, noduleDetails } = this.calculateSegmentedArea(segmentationData || []);
+
+                // Расчет объемов с округлением
+                const rightDepth = response.data.info.details?.right_depth || 0;
+                const rightLength = response.data.info.details?.right_length || 0;
+                const rightWidth = response.data.info.details?.right_width || 0;
+                const leftDepth = response.data.info.details?.left_depth || 0;
+                const leftLength = response.data.info.details?.left_length || 0;
+                const leftWidth = response.data.info.details?.left_width || 0;
+
+                const rightVolume = 0.479 * rightDepth * rightLength * rightWidth;
+                const leftVolume = 0.479 * leftDepth * leftLength * leftWidth;
+                const totalVolume = rightVolume + leftVolume;
+
+                // Обработка типов TI-RADS
+                let ar = [false, false, false, false, false];
+                let ar2 = [false, false, false, false, false];
+                let arr = [];
+                const aiTypes = new Set();
+                const doctorTypes = new Set();
+
+                if (segmentationData && segmentationData.length > 0) {
+                    segmentationData.forEach((item) => {
+                        if(!item.is_ai){
+                            doctorTypes.add(item);
+                        } else {
+                            aiTypes.add(item);
+                        }
+
+                        const noduleType = item.details?.nodule_type || 0;
+                        if(noduleType >= 1 && noduleType <= 5) {
+                            if(!item.is_ai){
+                                ar2[noduleType - 1] = true;
+                            } else {
+                                ar[noduleType - 1] = true;
+                            }
+                        }
+                        arr.push(`TI-RADS ${noduleType} ${!item.is_ai?'- подтверждено врачом':'- определил ассистент'}`);
+                    });
+                }
+
+                this.setState({
+                    slide_template: response.data.image?.slide_template || [],
+                    image_count: response.data.image?.image_count || 0,
+                    uziDate: new Date(response.data.info.diagnos_date),
+                    predictedTypes: segmentationData || [],
+                    nodule_amount: segmentationData ? segmentationData.length : 0,
+                    segmentation: segmentationData,
+                    patientCard: response.data.info.patient?.id || 1,
+                    patientPolicy: response.data.info.patient?.personal_policy || "",
+                    patientLastName: response.data.info.patient?.last_name || "",
+                    patientFirstName: response.data.info.patient?.first_name || "",
+                    patientFathersName: response.data.info.patient?.fathers_name || "",
+                    projectionType: response.data.info.details?.projection_type !== undefined ? response.data.info.details.projection_type : 'long',
+                    longResult: response.data.info.echo_descr || "",
+                    originalImage: response.data.image?.image || "",
+                    shortResult: response.data.info.has_nodules === 'T',
+                    cdk: response.data.info.details?.cdk || "не изменена",
+                    diagnosis: response.data.info.diagnosis || "",
+                    echogenicity: response.data.info.details?.echogenicity || "средняя",
+                    isthmus: response.data.info.details?.isthmus || 0,
+                    left_depth: leftDepth,
+                    left_length: leftLength,
+                    left_width: leftWidth,
+                    position: response.data.info.details?.position || "обычное",
+                    profile: response.data.info.details?.profile || "чёткие, ровные",
+                    result: response.data.info.details?.result || "без динамики",
+                    right_depth: rightDepth,
+                    right_length: rightLength,
+                    right_width: rightWidth,
+                    rln: response.data.info.details?.rln || "нет",
+                    structure: response.data.info.details?.structure || "однородная",
+                    additional_data: response.data.info.details?.additional_data || "",
+                    imageId: response.data.image?.id || 1,
+                    right_volume: !isNaN(rightVolume) ? rightVolume : 0,
+                    left_volume: !isNaN(leftVolume) ? leftVolume : 0,
+                    volume: !isNaN(totalVolume) ? totalVolume : 0,
+                    segmented_area_total: totalArea,
+                    nodule_details: noduleDetails,
+                    tiradsType: ar,
+                    typesForReport: arr,
+                    doctorTiradsType: ar2,
+                    aiTypes: aiTypes,
+                    doctorTypes: doctorTypes,
+                    checked: doctorTypes.size > 0
+                });
+            })
+            .catch(error => {
+                console.error("Error loading data:", error);
+            });
+    };
 
     handleExport = () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
-        //console.log(this.state)
-        axios.get(this.props.url + "/uzi/" + this.props.props + "/?format=json").then((response) => {
-            //console.log(response.data)
-            const formData = {patient_card: {}, details: {}}
-            formData.patient_card.patient = response.data.info.patient.id
-            formData.acceptance_datetime = this.state.uziDate
-            formData.patient_card.has_nodules = this.state.shortResult ? 'T' : 'F'
-            formData.patient_card.diagnosis = this.state.diagnosis
-            formData.details.projection_type = this.state.projectionType
-            formData.details.nodule_type = this.state.tiradsType
-            formData.uzi_device = this.state.uziDevice.id
-            formData.details.cdk = this.state.cdk
-            formData.details.echogenicity = this.state.echogenicity
-            formData.details.isthmus = this.state.isthmus
-            formData.details.left_depth = this.state.left_depth
-            formData.details.left_length = this.state.left_length
-            formData.details.left_width = this.state.left_width
-            formData.details.position = this.state.position
-            formData.details.profile = this.state.profile
-            formData.details.result = this.state.result
-            formData.details.right_depth = this.state.right_depth
-            formData.details.right_length = this.state.right_length
-            formData.details.right_width = this.state.right_width
-            formData.details.rln = this.state.rln
-            formData.details.structure = this.state.structure
-            formData.details.additional_data = this.state.additional_data
-            var index = 0
-            const tmp_ai_info = []
-            for(let item of this.state.tiradsType){
-                if(item){
-                    tmp_ai_info.push({nodule_type: index+1, nodule_2_3: index === 1 || index === 2? 1: 0,nodule_4: index === 3? 1: 0, nodule_5: index === 4? 1: 0, nodule_height: 1, nodule_length: 1, nodule_width: 1 })
-                }
-                index++
-            }
-            formData.details.ai_info = tmp_ai_info
-            console.log(formData)
-            axios.put(this.props.url + "/uzi/" + this.props.props + '/update/', formData).then(() => {
-                this.setState({
-                    openSuccess: true,
-                })
-                //console.log(this.state.openSuccess)
-            }).catch(() => {
-                this.setState({
-                    openError: true,
-                })
-                // console.log(this.state.openError)
-            })
-        })
 
+        const formData = {
+            patient_card: {
+                patient: this.state.patientCard,
+                has_nodules: this.state.shortResult ? 'T' : 'F',
+                diagnosis: this.state.diagnosis
+            },
+            acceptance_datetime: this.state.uziDate,
+            details: {
+                projection_type: this.state.projectionType,
+                nodule_type: this.state.tiradsType,
+                cdk: this.state.cdk,
+                echogenicity: this.state.echogenicity,
+                isthmus: this.state.isthmus,
+                left_depth: this.state.left_depth,
+                left_length: this.state.left_length,
+                left_width: this.state.left_width,
+                position: this.state.position,
+                profile: this.state.profile,
+                result: this.state.result,
+                right_depth: this.state.right_depth,
+                right_length: this.state.right_length,
+                right_width: this.state.right_width,
+                rln: this.state.rln,
+                structure: this.state.structure,
+                additional_data: this.state.additional_data
+            },
+            uzi_device: this.state.uziDevice.id
+        };
+
+        axios.put(this.props.url + "/uzi/" + this.props.props + '/update/', formData)
+            .then(() => {
+                this.setState({ openSuccess: true });
+            })
+            .catch(() => {
+                this.setState({ openError: true });
+            });
     };
+
+    // Обновленные обработчики для расчета объемов с округлением
+    handleLeft_depth = (event) => {
+        const value = parseFloat(event.target.value) || 0;
+        const leftVolume = 0.479 * value * this.state.left_length * this.state.left_width;
+        const totalVolume = leftVolume + this.state.right_volume;
+
+        this.setState({
+            left_depth: value,
+            left_volume: leftVolume,
+            volume: totalVolume,
+        });
+    }
+
+    handleLeft_length = (event) => {
+        const value = parseFloat(event.target.value) || 0;
+        const leftVolume = 0.479 * this.state.left_depth * value * this.state.left_width;
+        const totalVolume = leftVolume + this.state.right_volume;
+
+        this.setState({
+            left_length: value,
+            left_volume: leftVolume,
+            volume: totalVolume,
+        });
+    }
+
+    handleLeft_width = (event) => {
+        const value = parseFloat(event.target.value) || 0;
+        const leftVolume = 0.479 * this.state.left_depth * this.state.left_length * value;
+        const totalVolume = leftVolume + this.state.right_volume;
+
+        this.setState({
+            left_width: value,
+            left_volume: leftVolume,
+            volume: totalVolume,
+        });
+    }
+
+    handleRight_depth = (event) => {
+        const value = parseFloat(event.target.value) || 0;
+        const rightVolume = 0.479 * value * this.state.right_length * this.state.right_width;
+        const totalVolume = rightVolume + this.state.left_volume;
+
+        this.setState({
+            right_depth: value,
+            right_volume: rightVolume,
+            volume: totalVolume,
+        });
+    }
+
+    handleRight_length = (event) => {
+        const value = parseFloat(event.target.value) || 0;
+        const rightVolume = 0.479 * this.state.right_depth * value * this.state.right_width;
+        const totalVolume = rightVolume + this.state.left_volume;
+
+        this.setState({
+            right_length: value,
+            right_volume: rightVolume,
+            volume: totalVolume,
+        });
+    }
+
+    handleRight_width = (event) => {
+        const value = parseFloat(event.target.value) || 0;
+        const rightVolume = 0.479 * this.state.right_depth * this.state.right_length * value;
+        const totalVolume = rightVolume + this.state.left_volume;
+
+        this.setState({
+            right_width: value,
+            right_volume: rightVolume,
+            volume: totalVolume,
+        });
+    }
+
     handleCdk = (event) => {
         this.setState({
             cdk: event.target.value
-        })
+        });
     }
+
     handleDiagnosis = (event) => {
         this.setState({
             diagnosis: event.target.value
-        })
+        });
     }
 
     handleEchogenicity = (event) => {
         this.setState({
             echogenicity: event.target.value
-        })
+        });
     }
+
     handleIsthmus = (event) => {
         this.setState({
             isthmus: event.target.value
-        })
+        });
     }
 
-    handleLeft_depth = (event) => {
-        this.setState({
-            left_depth: event.target.value,
-            left_volume: 0.479 * event.target.value * this.state.left_length * this.state.left_width,
-            volume: 0.479 * event.target.value * this.state.left_length * this.state.left_width + this.state.right_volume,
-        })
-    }
-
-    handleLeft_length = (event) => {
-        this.setState({
-            left_length: event.target.value,
-            left_volume: 0.479 * this.state.left_depth * event.target.value * this.state.left_width,
-            volume: 0.479 * this.state.left_depth * event.target.value * this.state.left_width + this.state.right_volume,
-        })
-    }
     handleNoduleAmount = (event) => {
-        this.state.predictedTypes.push({nodule_type: 3, nodule_2_3: 1,nodule_4:  0, nodule_5: 0, nodule_height: 1, nodule_length: 1, nodule_width: 1 })
+        const newSegmentation = [...(this.state.segmentation || [])];
+        newSegmentation.push({
+            details: {
+                nodule_type: 3,
+                nodule_2_3: 1,
+                nodule_4: 0,
+                nodule_5: 0,
+                nodule_height: 1,
+                nodule_length: 1,
+                nodule_width: 1
+            }
+        });
+
+        // Пересчет площади
+        const { totalArea, noduleDetails } = this.calculateSegmentedArea(newSegmentation);
+
         this.setState({
-            nodule_amount: this.state.nodule_amount+1,
-        })
-    }
-    handleNoduleAmount2 = (event) => {
-        this.state.predictedTypes.pop()
-        this.setState({
-            nodule_amount: this.state.nodule_amount === 0? 0:this.state.nodule_amount -1,
-        })
+            nodule_amount: newSegmentation.length,
+            segmentation: newSegmentation,
+            segmented_area_total: totalArea,
+            nodule_details: noduleDetails
+        });
     }
 
-    handleLeft_width = (event) => {
-        this.setState({
-            left_width: event.target.value,
-            left_volume: 0.479 * this.state.left_depth * this.state.left_length * event.target.value,
-            volume: 0.479 * this.state.left_depth * this.state.left_length * event.target.value + this.state.right_volume,
-        })
-    }
+    handleNoduleAmount2 = () => {
+        const newSegmentation = [...(this.state.segmentation || [])];
+        if (newSegmentation.length > 0) {
+            newSegmentation.pop();
 
-    handleRight_depth = (event) => {
-        this.setState({
-            right_depth: event.target.value,
-            right_volume: 0.479 * event.target.value * this.state.right_length * this.state.right_width,
-            volume: 0.479 * event.target.value * this.state.right_length * this.state.right_width + this.state.left_volume,
-        })
-    }
+            // Пересчет площади
+            const { totalArea, noduleDetails } = this.calculateSegmentedArea(newSegmentation);
 
-    handleRight_length = (event) => {
-        this.setState({
-            right_length: event.target.value,
-            right_volume: 0.479 * this.state.right_depth * event.target.value * this.state.right_width,
-            volume: 0.479 * this.state.right_depth * event.target.value * this.state.right_width + this.state.left_volume
-
-        })
+            this.setState({
+                nodule_amount: newSegmentation.length,
+                segmentation: newSegmentation,
+                segmented_area_total: totalArea,
+                nodule_details: noduleDetails
+            });
+        }
     }
-    handleClick1 = () => {
-        //console.info(this.state.tiradsType)
-        this.setState({
-            tiradsType: [!this.state.tiradsType[0], this.state.tiradsType[1], this.state.tiradsType[2], this.state.tiradsType[3], this.state.tiradsType[4] ]
-        })
-    }
-    handleClick2 = () => {
-        this.setState({
-            tiradsType: [this.state.tiradsType[0], !this.state.tiradsType[1], this.state.tiradsType[2], this.state.tiradsType[3], this.state.tiradsType[4] ]
-        })
-    }
-    handleClick3 = () => {
-        this.setState({
-            tiradsType: [this.state.tiradsType[0], this.state.tiradsType[1], !this.state.tiradsType[2], this.state.tiradsType[3], this.state.tiradsType[4] ]
-        })
-    }
-    handleClick4 = () => {
-        this.setState({
-            tiradsType: [this.state.tiradsType[0], this.state.tiradsType[1], this.state.tiradsType[2], !this.state.tiradsType[3], this.state.tiradsType[4] ]
-        })
-    }
-    handleClick5 = () => {
-        this.setState({
-            tiradsType: [this.state.tiradsType[0], this.state.tiradsType[1], this.state.tiradsType[2], this.state.tiradsType[3], !this.state.tiradsType[4] ]
-        })
-    }
-
-    handleRight_width = (event) => {
-        this.setState({
-            right_width: event.target.value,
-            right_volume: 0.479 * this.state.right_depth * this.state.right_length * event.target.value,
-            volume: 0.479 * this.state.right_depth * this.state.right_length * event.target.value + this.state.left_volume
-
-        })
-    }
-
     handlePosition = (event) => {
         this.setState({
             position: event.target.value
-        })
+        });
     }
 
     handleProfile = (event) => {
         this.setState({
             profile: event.target.value
-        })
+        });
     }
+
     handleAdditional_data = (event) => {
         this.setState({
             additional_data: event.target.value
-        })
+        });
     }
+
     handleResult = (event) => {
         this.setState({
             result: event.target.value
-        })
+        });
     }
 
     handleRln = (event) => {
         this.setState({
             rln: event.target.value
-        })
+        });
     }
 
     handleStructure = (event) => {
         this.setState({
             structure: event.target.value
-        })
+        });
     }
 
     handleChooseTirads = (event) => {
@@ -674,13 +1017,12 @@ class ResultsPage extends React.Component {
             shortResult: !this.state.shortResult,
         });
     };
+
     handleChooseDevice = (event) => {
-        //console.log(event.target.value)
         this.setState({
             uziDevice: event.target.value,
             deviceChosen: true
         });
-        console.log(event.target.value)
     };
 
     handleChooseProjection = (event) => {
@@ -689,10 +1031,11 @@ class ResultsPage extends React.Component {
             projectionChosen: true,
         });
     };
+
     handleCloseDialog = () => {
         this.setState({
             open: false
-        })
+        });
     };
 
     handleClose = (event, reason) => {
@@ -703,15 +1046,16 @@ class ResultsPage extends React.Component {
         this.setState({
             openSuccess: false,
             openError: false,
-        })
+        });
     };
+
     handleDialog = () => {
         this.setState({
             open: true
-        })
+        });
     };
 
-    // Новый метод для получения цветов для каждого узла
+    // Метод для получения цветов для каждого узла
     getNoduleColor = (index) => {
         const colors = [
             '#4fb3ea', // синий
@@ -729,6 +1073,13 @@ class ResultsPage extends React.Component {
     };
 
     render() {
+        // Форматирование значений для PDF
+        const formattedLeftVolume = this.state.left_volume.toFixed(2);
+        const formattedRightVolume = this.state.right_volume.toFixed(2);
+        const formattedTotalVolume = this.state.volume.toFixed(2);
+        const formattedSegmentedArea = this.state.segmented_area_total.toFixed(2);
+        const segmentationSummary = this.getSegmentationSummary();
+
         return (
             <FormControl sx={{height: '100%', width: '100%'}}>
                 <Snackbar open={this.state.openSuccess} autoHideDuration={6000} onClose={this.handleClose}
@@ -825,27 +1176,6 @@ class ResultsPage extends React.Component {
                             </Grid>
                             <Grid component={""} item className={'first-step'}>
                                 <Box component={""} sx={{width: 500}} display={'flex'}>
-                                    <GlobalStyles styles={{
-                                        h6: {
-                                            color: 'dimgray',
-                                            fontSize: 20,
-                                            fontFamily: "Roboto",
-                                            fontWeight: 'normal',
-                                            whiteSpace: 'normal',
-                                            marginBlockStart: 0,
-                                            marginBlockEnd: 0,
-                                            marginInlineEnd: 5,
-                                        },
-                                        h3: {
-                                            color: 'dimgray',
-                                            fontSize: 20,
-                                            fontFamily: "Roboto",
-                                            fontWeight: "lighter",
-                                            whiteSpace: 'normal',
-                                            marginBlockStart: 0,
-                                            marginBlockEnd: 0,
-                                        }
-                                    }}/>
                                     <h3 style={{
                                         color: 'dimgray',
                                         fontSize: 20,
@@ -883,7 +1213,7 @@ class ResultsPage extends React.Component {
                                         }}>Типы новообразований, определенные ассистентом: </h3>
                                     </Button>
 
-                                    {/* Новое отображение: отдельная строка для каждого узла */}
+                                    {/* Отображение узлов, определенных ассистентом */}
                                     <Stack direction="column" spacing={1} sx={{paddingTop: 1}}>
                                         {Array.from(this.state.aiTypes).map((data, index) => (
                                             <Stack key={index} direction="row" alignItems="center" spacing={1}>
@@ -897,7 +1227,7 @@ class ResultsPage extends React.Component {
                                                     }}
                                                 />
                                                 <Chip
-                                                    label={`TI-RADS ${data.details.nodule_type}`}
+                                                    label={`TI-RADS ${data.details?.nodule_type || 0}`}
                                                     sx={{
                                                         color: '#4fb3ea',
                                                         borderColor: '#4fb3ea',
@@ -906,58 +1236,57 @@ class ResultsPage extends React.Component {
                                                     variant="outlined"
                                                 />
                                                 <Typography variant="body2" sx={{ color: 'dimgray', ml: 1 }}>
-                                                    (TI-RADS 2-3: {(data.details.nodule_2_3*100).toFixed(1)}%,
-                                                    TI-RADS 4: {(data.details.nodule_4*100).toFixed(1)}%,
-                                                    TI-RADS 5: {(data.details.nodule_5*100).toFixed(1)}%)
+                                                    (TI-RADS 2-3: {((data.details?.nodule_2_3 || 0) * 100).toFixed(1)}%,
+                                                    TI-RADS 4: {((data.details?.nodule_4 || 0) * 100).toFixed(1)}%,
+                                                    TI-RADS 5: {((data.details?.nodule_5 || 0) * 100).toFixed(1)}%)
                                                 </Typography>
                                             </Stack>
                                         ))}
                                     </Stack>
                                 </Stack>
 
-                                <Stack direction={'column'}>
-                                    <Button sx={{ textTransform: 'none'}} disabled={true}>
-                                        <h3 style={{
-                                            color: 'dimgray',
-                                            fontSize: 15,
-                                            fontFamily: "Roboto",
-                                            fontWeight: 'normal',
-                                            whiteSpace: 'normal',
-                                            marginBlockStart: 4.5,
-                                            marginInlineEnd: 5,
-                                        }}>Типы новообразований, определенные специалистом: </h3>
-                                    </Button>
-
-                                    {/* Новое отображение для узлов врача */}
-                                    <Stack direction="column" spacing={1} sx={{paddingTop: 1}}>
-                                        {Array.from(this.state.doctorTypes).map((data, index) => (
-                                            <Stack key={index} direction="row" alignItems="center" spacing={1}>
-                                                <Chip
-                                                    label={`Узел ${index + 1}`}
-                                                    sx={{
-                                                        backgroundColor: this.getNoduleColor(index),
-                                                        color: 'white',
-                                                        fontWeight: 'bold',
-                                                        minWidth: 80
-                                                    }}
-                                                />
-                                                <Chip
-                                                    label={`TI-RADS ${data.details.nodule_type}`}
-                                                    sx={{
-                                                        borderColor: '#194964',
-                                                        backgroundColor: '#194964',
-                                                        color: 'white',
-                                                        fontWeight: 'bold'
-                                                    }}
-                                                    variant="filled"
-                                                />
-                                                <Typography variant="body2" sx={{ color: 'dimgray', ml: 1, fontStyle: 'italic' }}>
-                                                    (подтверждено специалистом)
-                                                </Typography>
-                                            </Stack>
-                                        ))}
-                                    </Stack>
-                                </Stack>
+                                {/*<Stack direction={'column'}>*/}
+                                {/*    <Button sx={{ textTransform: 'none'}} disabled={true}>*/}
+                                {/*        <h3 style={{*/}
+                                {/*            color: 'dimgray',*/}
+                                {/*            fontSize: 15,*/}
+                                {/*            fontFamily: "Roboto",*/}
+                                {/*            fontWeight: 'normal',*/}
+                                {/*            whiteSpace: 'normal',*/}
+                                {/*            marginBlockStart: 4.5,*/}
+                                {/*            marginInlineEnd: 5,*/}
+                                {/*        }}>Типы новообразований, определенные специалистом: </h3>*/}
+                                {/*    </Button>*/}
+                                {/*    */}
+                                {/*    <Stack direction="column" spacing={1} sx={{paddingTop: 1}}>*/}
+                                {/*        {Array.from(this.state.doctorTypes).map((data, index) => (*/}
+                                {/*            <Stack key={index} direction="row" alignItems="center" spacing={1}>*/}
+                                {/*                <Chip*/}
+                                {/*                    label={`Узел ${index + 1}`}*/}
+                                {/*                    sx={{*/}
+                                {/*                        backgroundColor: this.getNoduleColor(index),*/}
+                                {/*                        color: 'white',*/}
+                                {/*                        fontWeight: 'bold',*/}
+                                {/*                        minWidth: 80*/}
+                                {/*                    }}*/}
+                                {/*                />*/}
+                                {/*                <Chip*/}
+                                {/*                    label={`TI-RADS ${data.details?.nodule_type || 0}`}*/}
+                                {/*                    sx={{*/}
+                                {/*                        borderColor: '#194964',*/}
+                                {/*                        backgroundColor: '#194964',*/}
+                                {/*                        color: 'white',*/}
+                                {/*                        fontWeight: 'bold'*/}
+                                {/*                    }}*/}
+                                {/*                    variant="filled"*/}
+                                {/*                />*/}
+                                {/*                <Typography variant="body2" sx={{ color: 'dimgray', ml: 1, fontStyle: 'italic' }}>*/}
+                                {/*                    (подтверждено специалистом)*/}
+                                {/*                </Typography>*/}
+                                {/*            </Stack>*/}
+                                {/*        ))}*/}
+                                {/*    </Stack>*/}
+                                {/*</Stack>*/}
                             </Box>
                         </Grid>
                         <Grid component={""} item alignItems={'center'} justifyContent={'center'} sx={{paddingTop: 0}}>
@@ -1027,34 +1356,59 @@ class ResultsPage extends React.Component {
                                     justifyContent: 'center',
                                     alignContent: 'center'
                                 }}>
-                                    <Button sx={{
-                                        color: '#4fb3ea',
-                                        '&:focus': {},
-                                        '&:hover': {},
-                                        fontFamily: 'Roboto'
-                                    }} className={'eighth-step'} variant={'outlined'} onClick={this.handleDialog}>
+                                    <OutlineButton
+                                        onClick={this.handleDialog}
+                                        sx={{width: '100%'}}
+                                    >
                                         Эхографические признаки
-                                    </Button>
+                                    </OutlineButton>
                                 </Box>
-                                <Dialog PaperProps={{sx: {borderRadius: 3, width: 2000}}}
-                                        open={this.state.open}
-                                        keepMounted
-                                        onClose={this.handleCloseDialog}
-                                        aria-describedby="alert-dialog-slide-description"
-                                        BackdropProps={{style: {opacity: 0.3}}}
+                                <Dialog
+                                    PaperProps={{
+                                        sx: {
+                                            borderRadius: '24px',
+                                            width: '800px',
+                                            maxWidth: '90vw',
+                                            maxHeight: '85vh',
+                                            overflow: 'hidden',
+                                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
+                                            border: '1px solid #E3F2FD'
+                                        }
+                                    }}
+                                    open={this.state.open}
+                                    onClose={this.handleCloseDialog}
+                                    aria-describedby="alert-dialog-slide-description"
+                                    BackdropProps={{
+                                        style: {
+                                            backgroundColor: 'rgba(25, 73, 100, 0.4)',
+                                            backdropFilter: 'blur(4px)'
+                                        }
+                                    }}
                                 >
+                                    <BootstrapDialogTitle onClose={this.handleCloseDialog}>
+                                        Эхографические признаки
+                                    </BootstrapDialogTitle>
 
-                                    <BootstrapDialogTitle color={'#4fb3ea'} fontWeight={'lighter'} fontSize={25}
-                                                          sx={{marginBottom: -2}} onClose={this.handleCloseDialog}>Результаты
-                                        диагностики</BootstrapDialogTitle>
-                                    <DialogContent>
-                                        <DialogContentText id="alert-dialog-slide-description" fontFamily={'Roboto'}
-                                                           fontWeight={'lighter'} color={'dimgray'} fontSize={10}
-                                                           sx={{marginBlock: 0}}>
-                                            Заполните необходимые поля
+                                    <DialogContent sx={{
+                                        padding: '24px 32px',
+                                        backgroundColor: '#FFFFFF'
+                                    }}>
+                                        <DialogContentText
+                                            id="alert-dialog-slide-description"
+                                            sx={{
+                                                fontFamily: 'Roboto',
+                                                fontWeight: 400,
+                                                color: '#607D8B',
+                                                fontSize: '14px',
+                                                marginBottom: '24px',
+                                                lineHeight: 1.6
+                                            }}
+                                        >
+                                            Заполните необходимые поля для описания эхографических признаков
                                         </DialogContentText>
-                                        <Box component={""} sx={{display: 'flex', flexDirection: 'column'}}>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+
+                                        <Box component={""} sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1066,154 +1420,151 @@ class ResultsPage extends React.Component {
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{display: 'flex', flexDirection: 'row'}}>
-                                                <Box component={""} sx={{display: 'flex', flexDirection: 'column', paddingRight: 2}}>
-                                                    <Grid component={""} item>
-                                                        <Typography component={""} sx={{
-                                                            paddingTop: 2,
-                                                            color: 'dimgray',
-                                                            fontWeight: 'lighter'
-                                                        }} variant={'body1'}>Левая доля</Typography>
-                                                        <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
-                                                            <FormControl variant={'outlined'} fullWidth>
-                                                                <TextFieldResult
-                                                                    value={this.state.left_length}
-                                                                    label="Длина"
-                                                                    onChange={this.handleLeft_length}
-                                                                    variant='outlined'
-                                                                    InputLabelProps={{shrink: true}}
-                                                                >
-                                                                </TextFieldResult>
-                                                            </FormControl>
-                                                        </Box>
-                                                    </Grid>
-                                                    <Grid component={""} item>
-                                                        <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
-                                                            <FormControl variant={'outlined'} fullWidth>
-                                                                <TextFieldResult
-                                                                    value={this.state.left_width}
-                                                                    label="Ширина"
-                                                                    onChange={this.handleLeft_width}
-                                                                    variant='outlined'
-                                                                    InputLabelProps={{shrink: true}}
-                                                                >
-                                                                </TextFieldResult>
-                                                            </FormControl>
-                                                        </Box>
-                                                    </Grid>
-
-                                                    <Grid component={""} item>
-                                                        <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
-                                                            <FormControl variant={'outlined'} fullWidth>
-                                                                <TextFieldResult
-                                                                    value={this.state.left_depth}
-                                                                    label="Толщина"
-                                                                    onChange={this.handleLeft_depth}
-                                                                    variant='outlined'
-                                                                    InputLabelProps={{shrink: true}}
-                                                                >
-                                                                </TextFieldResult>
-                                                            </FormControl>
-                                                        </Box>
-                                                        <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
-                                                            <FormControl variant={'outlined'} fullWidth>
-                                                                <TextFieldResult
-                                                                    value={this.state.left_volume}
-                                                                    label="Объем"
-                                                                    variant='outlined'
-                                                                    InputLabelProps={{shrink: true}}
-                                                                >
-                                                                </TextFieldResult>
-                                                            </FormControl>
-                                                        </Box>
-                                                    </Grid>
-                                                </Box>
-                                                <Box component={""} sx={{display: 'flex', flexDirection: 'column'}}>
-                                                    <Grid component={""} item>
-                                                        <Typography component={""} sx={{
-                                                            paddingTop: 2,
-                                                            color: 'dimgray',
-                                                            fontWeight: 'lighter'
-                                                        }} variant={'body1'}>Правая доля</Typography>
-                                                        <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
-                                                            <FormControl variant={'outlined'} fullWidth>
-                                                                <TextFieldResult
-                                                                    value={this.state.right_length}
-                                                                    label="Длина"
-                                                                    onChange={this.handleRight_length}
-                                                                    variant='outlined'
-                                                                    InputLabelProps={{shrink: true}}
-                                                                >
-                                                                </TextFieldResult>
-                                                            </FormControl>
-                                                        </Box>
-                                                    </Grid>
-                                                    <Grid component={""} item>
-                                                        <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
-                                                            <FormControl variant={'outlined'} fullWidth>
-                                                                <TextFieldResult
-                                                                    value={this.state.right_width}
-                                                                    label="Ширина"
-                                                                    onChange={this.handleRight_width}
-                                                                    variant='outlined'
-                                                                    InputLabelProps={{shrink: true}}
-                                                                >
-                                                                </TextFieldResult>
-                                                            </FormControl>
-                                                        </Box>
-                                                    </Grid>
-
-                                                    <Grid component={""} item>
-                                                        <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
-                                                            <FormControl variant={'outlined'} fullWidth>
-                                                                <TextFieldResult
-                                                                    value={this.state.right_depth}
-                                                                    label="Толщина"
-                                                                    onChange={this.handleRight_depth}
-                                                                    variant='outlined'
-                                                                    InputLabelProps={{shrink: true}}
-                                                                >
-                                                                </TextFieldResult>
-                                                            </FormControl>
-                                                        </Box>
-                                                    </Grid>
-                                                    <Box component={""} sx={{width: 100, borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{display: 'flex', flexDirection: 'row', gap: 2}}>
+                                                <Box component={""} sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
+                                                    <Typography component={""} sx={{
+                                                        paddingTop: 1,
+                                                        color: '#194964',
+                                                        fontWeight: 600,
+                                                        fontSize: '16px'
+                                                    }} variant={'body1'}>Левая доля</Typography>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
                                                         <FormControl variant={'outlined'} fullWidth>
                                                             <TextFieldResult
-                                                                value={this.state.right_volume}
-                                                                label="Объем"
+                                                                value={this.state.left_length}
+                                                                label="Длина (см)"
+                                                                onChange={this.handleLeft_length}
                                                                 variant='outlined'
                                                                 InputLabelProps={{shrink: true}}
                                                             >
                                                             </TextFieldResult>
                                                         </FormControl>
                                                     </Box>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
+                                                        <FormControl variant={'outlined'} fullWidth>
+                                                            <TextFieldResult
+                                                                value={this.state.left_width}
+                                                                label="Ширина (см)"
+                                                                onChange={this.handleLeft_width}
+                                                                variant='outlined'
+                                                                InputLabelProps={{shrink: true}}
+                                                            >
+                                                            </TextFieldResult>
+                                                        </FormControl>
+                                                    </Box>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
+                                                        <FormControl variant={'outlined'} fullWidth>
+                                                            <TextFieldResult
+                                                                value={this.state.left_depth}
+                                                                label="Толщина (см)"
+                                                                onChange={this.handleLeft_depth}
+                                                                variant='outlined'
+                                                                InputLabelProps={{shrink: true}}
+                                                            >
+                                                            </TextFieldResult>
+                                                        </FormControl>
+                                                    </Box>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
+                                                        <FormControl variant={'outlined'} fullWidth>
+                                                            <TextFieldResult
+                                                                value={formattedLeftVolume}
+                                                                label="Объем (см³)"
+                                                                variant='outlined'
+                                                                InputLabelProps={{shrink: true}}
+                                                                InputProps={{
+                                                                    readOnly: true,
+                                                                }}
+                                                            >
+                                                            </TextFieldResult>
+                                                        </FormControl>
+                                                    </Box>
+                                                </Box>
+                                                <Box component={""} sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
+                                                    <Typography component={""} sx={{
+                                                        paddingTop: 1,
+                                                        color: '#194964',
+                                                        fontWeight: 600,
+                                                        fontSize: '16px'
+                                                    }} variant={'body1'}>Правая доля</Typography>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
+                                                        <FormControl variant={'outlined'} fullWidth>
+                                                            <TextFieldResult
+                                                                value={this.state.right_length}
+                                                                label="Длина (см)"
+                                                                onChange={this.handleRight_length}
+                                                                variant='outlined'
+                                                                InputLabelProps={{shrink: true}}
+                                                            >
+                                                            </TextFieldResult>
+                                                        </FormControl>
+                                                    </Box>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
+                                                        <FormControl variant={'outlined'} fullWidth>
+                                                            <TextFieldResult
+                                                                value={this.state.right_width}
+                                                                label="Ширина (см)"
+                                                                onChange={this.handleRight_width}
+                                                                variant='outlined'
+                                                                InputLabelProps={{shrink: true}}
+                                                            >
+                                                            </TextFieldResult>
+                                                        </FormControl>
+                                                    </Box>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
+                                                        <FormControl variant={'outlined'} fullWidth>
+                                                            <TextFieldResult
+                                                                value={this.state.right_depth}
+                                                                label="Толщина (см)"
+                                                                onChange={this.handleRight_depth}
+                                                                variant='outlined'
+                                                                InputLabelProps={{shrink: true}}
+                                                            >
+                                                            </TextFieldResult>
+                                                        </FormControl>
+                                                    </Box>
+                                                    <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 1}}>
+                                                        <FormControl variant={'outlined'} fullWidth>
+                                                            <TextFieldResult
+                                                                value={formattedRightVolume}
+                                                                label="Объем (см³)"
+                                                                variant='outlined'
+                                                                InputLabelProps={{shrink: true}}
+                                                                InputProps={{
+                                                                    readOnly: true,
+                                                                }}
+                                                            >
+                                                            </TextFieldResult>
+                                                        </FormControl>
+                                                    </Box>
                                                 </Box>
                                             </Box>
-                                            <Box component={""} sx={{width: 215, borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
-                                                        value={this.state.volume}
-                                                        label="Объем железы"
+                                                        value={formattedTotalVolume}
+                                                        label="Объем железы (см³)"
                                                         variant='outlined'
                                                         InputLabelProps={{shrink: true}}
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                        }}
                                                     >
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: 215, borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
                                                         value={this.state.isthmus}
-                                                        label="Перешеек"
+                                                        label="Перешеек (см)"
                                                         onChange={this.handleIsthmus}
                                                         variant='outlined'
                                                     >
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1225,7 +1576,7 @@ class ResultsPage extends React.Component {
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1237,7 +1588,7 @@ class ResultsPage extends React.Component {
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1249,7 +1600,7 @@ class ResultsPage extends React.Component {
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1261,7 +1612,7 @@ class ResultsPage extends React.Component {
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1273,7 +1624,7 @@ class ResultsPage extends React.Component {
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1285,7 +1636,7 @@ class ResultsPage extends React.Component {
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-                                            <Box component={""} sx={{width: '100%', borderRadius: 3, paddingTop: 2}}>
+                                            <Box component={""} sx={{width: '100%', borderRadius: 3}}>
                                                 <FormControl variant={'outlined'} fullWidth>
                                                     <TextFieldResult
                                                         InputLabelProps={{shrink: true}}
@@ -1293,15 +1644,44 @@ class ResultsPage extends React.Component {
                                                         label="Заключение"
                                                         onChange={this.handleDiagnosis}
                                                         variant='outlined'
+                                                        multiline
+                                                        rows={3}
                                                     >
                                                     </TextFieldResult>
                                                 </FormControl>
                                             </Box>
-
-
                                         </Box>
                                     </DialogContent>
-                                    <DialogActions>
+                                    <DialogActions sx={{
+                                        padding: '20px 32px 28px',
+                                        backgroundColor: '#F8FBFF',
+                                        borderTop: '1px solid #E3F2FD',
+                                        gap: 2
+                                    }}>
+                                        <Button
+                                            onClick={this.handleCloseDialog}
+                                            sx={{
+                                                color: '#607D8B',
+                                                textTransform: 'none',
+                                                fontWeight: 500,
+                                                padding: '10px 24px',
+                                                borderRadius: '10px',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(144, 164, 174, 0.08)',
+                                                }
+                                            }}
+                                        >
+                                            Отмена
+                                        </Button>
+                                        <SecondaryButton
+                                            key="save-btn"
+                                            onClick={() => {
+                                                this.handleExport();
+                                                this.handleCloseDialog();
+                                            }}
+                                        >
+                                            Сохранить изменения
+                                        </SecondaryButton>
                                     </DialogActions>
                                 </Dialog>
                             </Box>
@@ -1311,93 +1691,71 @@ class ResultsPage extends React.Component {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         justifyContent: 'center',
-                                        alignContent: 'center', alignItems: 'center'
-                                    }}
-                                    >
-                                        <Box component={""} sx={{
-                                            width: 300,
-                                            borderRadius: 3,
-                                            paddingBottom: 2,
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignContent: 'center'
-                                        }}><Button sx={{
-                                            width: '100%',
-                                            color: '#4fb3ea',
-                                            '&:focus': {},
-                                            '&:hover': {},
-                                            fontFamily: 'Roboto'
-                                        }} variant={'outlined'} onClick={this.handleResponse}>
+                                        alignContent: 'center',
+                                        alignItems: 'center',
+                                        gap: 2
+                                    }}>
+                                        <PrimaryButton
+                                            sx={{width: '100%'}}
+                                            onClick={this.handleResponse}
+                                        >
                                             Сохранить результат
-                                        </Button>
-                                        </Box>
-                                        <Box component={""} sx={{
-                                            width: 300,
-                                            borderRadius: 3,
-                                            paddingBottom: 2,
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignContent: 'center'
-                                        }}>
-                                            <PDFDownloadLink document={<MyDocument patient={this.state.patientLastName + " " + this.state.patientFirstName + " " + this.state.patientFathersName}
-                                                                                   policy={this.state.patientPolicy}
-                                                                                   date={new Date(Date.parse(this.state.uziDate)).toLocaleDateString()}
-                                                                                   projection={this.state.projectionType === 'long' ? 'Продольная' : "Поперечная"}
-                                                                                   device={this.state.uziDevice.name}
-                                                                                   tiradsType={this.state.tiradsType}
-                                                                                   predictedTypes={this.state.typesForReport.toString().replaceAll(',', ", ")}
-                                                                                   cdk={this.state.cdk}
-                                                                                   diagnosis={this.state.diagnosis}
-                                                                                   echogenicity={this.state.echogenicity}
-                                                                                   isthmus={this.state.isthmus}
-                                                                                   left_depth={this.state.left_depth}
-                                                                                   left_length={this.state.left_length}
-                                                                                   left_width={this.state.left_width}
-                                                                                   position={this.state.position}
-                                                                                   profile={this.state.profile}
-                                                                                   result={this.state.result}
-                                                                                   right_depth={this.state.right_depth}
-                                                                                   right_length={this.state.right_length}
-                                                                                   right_width={this.state.right_width}
-                                                                                   rln={this.state.rln}
-                                                                                   structure={this.state.structure}
-                                                                                   left_volume={this.state.left_volume}
-                                                                                   right_volume={this.state.right_volume}
-                                                                                   volume={this.state.volume}
-                                                                                   additional_data={this.state.additional_data}
-                                                                                   doctorName={this.state.doctorName}
-                                                                                   medOrg={this.state.medOrg}
-                                            />} fileName={"Result_"+this.state.date.toLocaleDateString().replaceAll(".", "_")+"_"+this.state.patientLastName+".pdf"}
-                                                             style={{textDecoration: 'none'}}>
-                                                {({ loading}) =>
-                                                    (loading ? "loading" : <Button sx={{
-                                                        width: '100%',
-                                                        color: '#4fb3ea',
-                                                        '&:focus': {},
-                                                        '&:hover': {},
-                                                        fontFamily: 'Roboto'
-                                                    }} className={'ninth-step'} variant={'outlined'}>Скачать заключение</Button>)}
-                                            </PDFDownloadLink>
-                                        </Box>
-                                        <Box component={""} sx={{
-                                            width: 300, borderRadius: 3, display: 'flex', justifyContent: 'center',
-                                            alignContent: 'center'
-                                        }}>
-                                        </Box>
-
+                                        </PrimaryButton>
+                                        <PDFDownloadLink
+                                            key="pdf-link"
+                                            document={
+                                                <MyDocument
+                                                    patient={this.state.patientLastName + " " + this.state.patientFirstName + " " + this.state.patientFathersName}
+                                                    policy={this.state.patientPolicy}
+                                                    date={new Date(Date.parse(this.state.uziDate)).toLocaleDateString()}
+                                                    projection={this.state.projectionType === 'long' ? 'Продольная' : "Поперечная"}
+                                                    device={this.state.uziDevice.name}
+                                                    tiradsType={this.state.tiradsType}
+                                                    predictedTypes={this.state.typesForReport.toString().replaceAll(',', ", ")}
+                                                    cdk={this.state.cdk}
+                                                    diagnosis={this.state.diagnosis}
+                                                    echogenicity={this.state.echogenicity}
+                                                    isthmus={this.state.isthmus.toFixed(2)}
+                                                    left_depth={this.state.left_depth.toFixed(2)}
+                                                    left_length={this.state.left_length.toFixed(2)}
+                                                    left_width={this.state.left_width.toFixed(2)}
+                                                    position={this.state.position}
+                                                    profile={this.state.profile}
+                                                    result={this.state.result}
+                                                    right_depth={this.state.right_depth.toFixed(2)}
+                                                    right_length={this.state.right_length.toFixed(2)}
+                                                    right_width={this.state.right_width.toFixed(2)}
+                                                    rln={this.state.rln}
+                                                    structure={this.state.structure}
+                                                    left_volume={formattedLeftVolume}
+                                                    right_volume={formattedRightVolume}
+                                                    volume={formattedTotalVolume}
+                                                    additional_data={this.state.additional_data}
+                                                    doctorName={this.state.doctorName}
+                                                    medOrg={this.state.medOrg}
+                                                    nodule_count={this.state.nodule_amount}
+                                                    segmented_area={formattedSegmentedArea}
+                                                    segmentation_summary={segmentationSummary}
+                                                />
+                                            }
+                                            fileName={"Result_"+this.state.date.toLocaleDateString().replaceAll(".", "_")+"_"+this.state.patientLastName+".pdf"}
+                                            style={{textDecoration: 'none', width: '100%'}}
+                                        >
+                                            {({ loading}) =>
+                                                (loading ? "loading" :
+                                                        <OutlineButton sx={{width: '100%'}}>
+                                                            Скачать заключение
+                                                        </OutlineButton>
+                                                )}
+                                        </PDFDownloadLink>
                                     </Box>
-
                                 </Box>
-
                             </Box>
-
                         </Box>
                     </Grid>
                 </Box>
-
             </FormControl>
         )
-
     }
 }
 
