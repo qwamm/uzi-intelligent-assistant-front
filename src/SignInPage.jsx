@@ -380,7 +380,7 @@ class SignInPage extends React.Component {
                             display: { xs: 'none', md: 'flex' },
                             alignItems: 'center',
                             justifyContent: 'center',
-                            padding: 8,
+                            padding: 4,
                             position: 'relative',
                             zIndex: 1
                         }}>
@@ -397,10 +397,11 @@ class SignInPage extends React.Component {
                                         color: 'white',
                                         lineHeight: 1.2,
                                         mb: 4,
-                                        textShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                                        textShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                                        textAlign: 'center'
                                     }}
                                 >
-                                    Интеллектуальный ассистент врача ультразвуковой диагностики узловых образований щитовидной железы по ТУ 58.29.32-001-02066569-2025
+                                    Интеллектуальный ассистент врача ультразвуковой диагностики узловых образований щитовидной железы «Второе мнение» по ТУ 58.29.32-001-02066569-2025
                                 </Typography>
                             </Box>
                         </Box>

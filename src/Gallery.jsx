@@ -252,26 +252,26 @@ const TiffImageComponent = (props) => {
     };
     return (
         <div>
-            <Box component={""} display={'flex'} alignItems={'center'} justifyItems={'center'} justifyContent={'center'}
-                 alignContent={'center'}>
+            {/*<Box component={""} display={'flex'} alignItems={'center'} justifyItems={'center'} justifyContent={'center'}*/}
+            {/*     alignContent={'center'}>*/}
 
-                {/*<Button variant={'outlined'} sx={{marginY: 2, color: '#4fb3ea'}} alt={'Сменить инструмент'} onClick={handleChangeTool}>*/}
-                {/*    {tool === 'polygon'? <BiShapePolygon size={'2em'}/> : <BiRectangle size={'2em'}/>}*/}
-                {/*</Button>*/}
-                {/*<Button variant={'outlined'} sx={{marginY: 2,marginX:1, color: '#4fb3ea'}} onClick={handleExport}>*/}
-                {/*    <AiOutlineSave size={'2em'}/>*/}
-                {/*</Button>*/}
-                <Button className={'sixth-step'} component={Link} to={`update/`} variant={'outlined'} sx={{marginY: 2,marginX:1, color: '#194964', borderRadius:10, borderColor: '#194964'}}>
-                    Изменить результаты
-                </Button>
-            </Box>
+            {/*    /!*<Button variant={'outlined'} sx={{marginY: 2, color: '#4fb3ea'}} alt={'Сменить инструмент'} onClick={handleChangeTool}>*!/*/}
+            {/*    /!*    {tool === 'polygon'? <BiShapePolygon size={'2em'}/> : <BiRectangle size={'2em'}/>}*!/*/}
+            {/*    /!*</Button>*!/*/}
+            {/*    /!*<Button variant={'outlined'} sx={{marginY: 2,marginX:1, color: '#4fb3ea'}} onClick={handleExport}>*!/*/}
+            {/*    /!*    <AiOutlineSave size={'2em'}/>*!/*/}
+            {/*    /!*</Button>*!/*/}
+            {/*    <Button className={'sixth-step'} component={Link} to={`update/`} variant={'outlined'} sx={{marginY: 2,marginX:1, color: '#194964', borderRadius:10, borderColor: '#194964'}}>*/}
+            {/*        Изменить результаты*/}
+            {/*    </Button>*/}
+            {/*</Box>*/}
             {!succ &&
                 <Box component={""} display={'flex'} alignItems={'center'} justifyItems={'center'} justifyContent={'center'}
                      alignContent={'center'} sx={{minHeight: 600}}>
                     <CircularProgress variant="indeterminate" sx={{color:'#4fb3ea'}} {...props}/> </Box>}
 
             <Box component={""} display={'flex'} alignItems={'center'} justifyItems={'center'} justifyContent={'center'}
-                 alignContent={'center'} sx={{height: !succ? 20:600, visibility: !succ? 'hidden': 'visible'}}>
+                 alignContent={'center'} sx={{paddingTop: 5, height: !succ? 20:600, visibility: !succ? 'hidden': 'visible'}}>
                 <OpenSeadragonViewer sidebar={sidebar} type={type} image={props.img.split('.')[1] === 'tiff' || props.img.split('.')[1] === 'tif'? imgArray : {type: "image", url: props.img}} url={props.url} seg={props.seg} boxes={props.boxes} tool={tool} imageid={props.imageid} length={length} date={props.date}/>
             </Box>
             {/*  //      <Box component={""} container direction={'column'} alignItems={'center'} sx={{paddingBottom: 1}}>*/}
